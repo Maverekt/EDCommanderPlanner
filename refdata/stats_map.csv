@@ -1,0 +1,191 @@
+counter,category,label,unit
+Bank_Account.Current_Wealth,Bank,Current wealth,credits
+Bank_Account.Spent_On_Ships,Bank,Spent on ships,credits
+Bank_Account.Spent_On_Outfitting,Bank,Spent on outfitting,credits
+Bank_Account.Spent_On_Repairs,Bank,Spent on repairs,credits
+Bank_Account.Spent_On_Fuel,Bank,Spent on fuel,credits
+Bank_Account.Spent_On_Ammo_Consumables,Bank,Spent on ammo consumables,credits
+Bank_Account.Insurance_Claims,Bank,Insurance claims,count
+Bank_Account.Spent_On_Insurance,Bank,Spent on insurance,credits
+Bank_Account.Owned_Ship_Count,Bank,Owned ship count,count
+Bank_Account.Spent_On_Suits,Bank,Spent on suits,credits
+Bank_Account.Spent_On_Weapons,Bank,Spent on weapons,credits
+Bank_Account.Spent_On_Suit_Consumables,Bank,Spent on suit consumables,credits
+Bank_Account.Suits_Owned,Bank,Suits owned,count
+Bank_Account.Weapons_Owned,Bank,Weapons owned,count
+Bank_Account.Spent_On_Premium_Stock,Bank,Spent on premium stock,credits
+Bank_Account.Premium_Stock_Bought,Bank,Premium stock bought,count
+Combat.Bounties_Claimed,Combat,Bounties claimed,count
+Combat.Bounty_Hunting_Profit,Combat,Bounty hunting profit,credits
+Combat.Combat_Bonds,Combat,Combat bonds,count
+Combat.Combat_Bond_Profits,Combat,Combat bond profits,credits
+Combat.Assassinations,Combat,Assassinations,count
+Combat.Assassination_Profits,Combat,Assassination profits,credits
+Combat.Highest_Single_Reward,Combat,Highest single reward,credits
+Combat.Skimmers_Killed,Combat,Skimmers killed,count
+Combat.OnFoot_Combat_Bonds,Combat,On-foot combat bonds,count
+Combat.OnFoot_Combat_Bonds_Profits,Combat,On-foot combat bonds profits,credits
+Combat.OnFoot_Vehicles_Destroyed,Combat,On-foot vehicles destroyed,count
+Combat.OnFoot_Ships_Destroyed,Combat,On-foot ships destroyed,count
+Combat.Dropships_Taken,Combat,Dropships taken,count
+Combat.Dropships_Booked,Combat,Dropships booked,count
+Combat.Dropships_Cancelled,Combat,Dropships cancelled,count
+Combat.ConflictZone_High,Combat,Conflict zone high,count
+Combat.ConflictZone_Medium,Combat,Conflict zone medium,count
+Combat.ConflictZone_Low,Combat,Conflict zone low,count
+Combat.ConflictZone_Total,Combat,Conflict zone total,count
+Combat.ConflictZone_High_Wins,Combat,Conflict zone high wins,count
+Combat.ConflictZone_Medium_Wins,Combat,Conflict zone medium wins,count
+Combat.ConflictZone_Low_Wins,Combat,Conflict zone low wins,count
+Combat.ConflictZone_Total_Wins,Combat,Conflict zone total wins,count
+Combat.Settlement_Defended,Combat,Settlement defended,count
+Combat.Settlement_Conquered,Combat,Settlement conquered,count
+Combat.OnFoot_Skimmers_Killed,Combat,On-foot skimmers killed,count
+Combat.OnFoot_Scavs_Killed,Combat,On-foot scavs killed,count
+Crime.Notoriety,Crime,Notoriety,count
+Crime.Fines,Crime,Fines,count
+Crime.Total_Fines,Crime,Total fines,credits
+Crime.Bounties_Received,Crime,Bounties received,count
+Crime.Total_Bounties,Crime,Total bounties,credits
+Crime.Highest_Bounty,Crime,Highest bounty,credits
+Crime.Malware_Uploaded,Crime,Malware uploaded,count
+Crime.Settlements_State_Shutdown,Crime,Settlements state shutdown,count
+Crime.Production_Sabotage,Crime,Production sabotage,count
+Crime.Production_Theft,Crime,Production theft,count
+Crime.Total_Murders,Crime,Total murders,count
+Crime.Citizens_Murdered,Crime,Citizens murdered,count
+Crime.Omnipol_Murdered,Crime,Omnipol murdered,count
+Crime.Guards_Murdered,Crime,Guards murdered,count
+Crime.Data_Stolen,Crime,Data stolen,count
+Crime.Goods_Stolen,Crime,Goods stolen,count
+Crime.Sample_Stolen,Crime,Sample stolen,count
+Crime.Total_Stolen,Crime,Total stolen,count
+Crime.Turrets_Destroyed,Crime,Turrets destroyed,count
+Crime.Turrets_Overloaded,Crime,Turrets overloaded,count
+Crime.Turrets_Total,Crime,Turrets total,count
+Crime.Value_Stolen_StateChange,Crime,Value stolen (state change),credits
+Crime.Profiles_Cloned,Crime,Profiles cloned,count
+Smuggling.Black_Markets_Traded_With,Smuggling,Black markets traded with,count
+Smuggling.Black_Markets_Profits,Smuggling,Black markets profits,credits
+Smuggling.Resources_Smuggled,Smuggling,Resources smuggled,count
+Smuggling.Average_Profit,Smuggling,Average profit,credits
+Smuggling.Highest_Single_Transaction,Smuggling,Highest single transaction,credits
+Trading.Markets_Traded_With,Trading,Markets traded with,count
+Trading.Market_Profits,Trading,Market profits,credits
+Trading.Resources_Traded,Trading,Resources traded,count
+Trading.Average_Profit,Trading,Average profit,credits
+Trading.Highest_Single_Transaction,Trading,Highest single transaction,credits
+Trading.Data_Sold,Trading,Data sold,count
+Trading.Goods_Sold,Trading,Goods sold,count
+Trading.Assets_Sold,Trading,Assets sold,count
+Mining.Mining_Profits,Mining,Mining profits,credits
+Mining.Quantity_Mined,Mining,Quantity mined,count
+Mining.Materials_Collected,Mining,Materials collected,count
+Exploration.Systems_Visited,Exploration,Systems visited,count
+Exploration.Exploration_Profits,Exploration,Exploration profits,credits
+Exploration.Planets_Scanned_To_Level_2,Exploration,Planets scanned to level 2,count
+Exploration.Planets_Scanned_To_Level_3,Exploration,Planets scanned to level 3,count
+Exploration.Efficient_Scans,Exploration,Efficient scans,count
+Exploration.Highest_Payout,Exploration,Highest payout,credits
+Exploration.Total_Hyperspace_Distance,Exploration,Total hyperspace distance,ly
+Exploration.Total_Hyperspace_Jumps,Exploration,Total hyperspace jumps,count
+Exploration.Greatest_Distance_From_Start,Exploration,Greatest distance from start,ly
+Exploration.Time_Played,Exploration,Time played,seconds
+Exploration.OnFoot_Distance_Travelled,Exploration,On-foot distance travelled,metres
+Exploration.Shuttle_Journeys,Exploration,Shuttle journeys,count
+Exploration.Shuttle_Distance_Travelled,Exploration,Shuttle distance travelled,ly
+Exploration.Spent_On_Shuttles,Exploration,Spent on shuttles,credits
+Exploration.First_Footfalls,Exploration,First footfalls,count
+Exploration.Planet_Footfalls,Exploration,Planet footfalls,count
+Exploration.Settlements_Visited,Exploration,Settlements visited,count
+Passengers.Passengers_Missions_Accepted,Passengers,Accepted,count
+Passengers.Passengers_Missions_Bulk,Passengers,Bulk,count
+Passengers.Passengers_Missions_VIP,Passengers,VIP,count
+Passengers.Passengers_Missions_Delivered,Passengers,Delivered,count
+Passengers.Passengers_Missions_Ejected,Passengers,Ejected,count
+Search_And_Rescue.SearchRescue_Traded,Search & Rescue,Traded,count
+Search_And_Rescue.SearchRescue_Profit,Search & Rescue,Profit,credits
+Search_And_Rescue.SearchRescue_Count,Search & Rescue,Count,count
+Search_And_Rescue.Salvage_Legal_POI,Search & Rescue,Salvage legal POI,count
+Search_And_Rescue.Salvage_Legal_Settlements,Search & Rescue,Salvage legal settlements,count
+Search_And_Rescue.Salvage_Illegal_POI,Search & Rescue,Salvage illegal POI,count
+Search_And_Rescue.Salvage_Illegal_Settlements,Search & Rescue,Salvage illegal settlements,count
+Search_And_Rescue.Maglocks_Opened,Search & Rescue,Maglocks opened,count
+Search_And_Rescue.Panels_Opened,Search & Rescue,Panels opened,count
+Search_And_Rescue.Settlements_State_FireOut,Search & Rescue,Settlements state fireout,count
+Search_And_Rescue.Settlements_State_Reboot,Search & Rescue,Settlements state reboot,count
+Squadron.Squadron_Bank_Credits_Deposited,Squadron,Bank credits deposited,credits
+Squadron.Squadron_Bank_Credits_Withdrawn,Squadron,Bank credits withdrawn,credits
+Squadron.Squadron_Bank_Commodities_Deposited_Num,Squadron,Bank commodities deposited (count),count
+Squadron.Squadron_Bank_Commodities_Deposited_Value,Squadron,Bank commodities deposited (value),credits
+Squadron.Squadron_Bank_Commodities_Withdrawn_Num,Squadron,Bank commodities withdrawn (count),count
+Squadron.Squadron_Bank_Commodities_Withdrawn_Value,Squadron,Bank commodities withdrawn (value),credits
+Squadron.Squadron_Bank_PersonalAssets_Deposited_Num,Squadron,Bank personal assets deposited (count),count
+Squadron.Squadron_Bank_PersonalAssets_Deposited_Value,Squadron,Bank personal assets deposited (value),credits
+Squadron.Squadron_Bank_PersonalAssets_Withdrawn_Num,Squadron,Bank personal assets withdrawn (count),count
+Squadron.Squadron_Bank_PersonalAssets_Withdrawn_Value,Squadron,Bank personal assets withdrawn (value),credits
+Squadron.Squadron_Bank_Ships_Deposited_Num,Squadron,Bank ships deposited (count),count
+Squadron.Squadron_Bank_Ships_Deposited_Value,Squadron,Bank ships deposited (value),credits
+Squadron.Squadron_Leaderboard_aegis_highestcontribution,Squadron,Leaderboard AEGIS highest contribution,count
+Squadron.Squadron_Leaderboard_bgs_highestcontribution,Squadron,Leaderboard BGS highest contribution,count
+Squadron.Squadron_Leaderboard_bounty_highestcontribution,Squadron,Leaderboard bounty highest contribution,count
+Squadron.Squadron_Leaderboard_colonisation_contribution_highestcontribution,Squadron,Leaderboard colonisation contribution highest contribution,count
+Squadron.Squadron_Leaderboard_combat_highestcontribution,Squadron,Leaderboard combat highest contribution,count
+Squadron.Squadron_Leaderboard_cqc_highestcontribution,Squadron,Leaderboard CQC highest contribution,count
+Squadron.Squadron_Leaderboard_exploration_highestcontribution,Squadron,Leaderboard exploration highest contribution,count
+Squadron.Squadron_Leaderboard_mining_highestcontribution,Squadron,Leaderboard mining highest contribution,count
+Squadron.Squadron_Leaderboard_powerplay_highestcontribution,Squadron,Leaderboard powerplay highest contribution,count
+Squadron.Squadron_Leaderboard_trade_highestcontribution,Squadron,Leaderboard trade highest contribution,count
+Squadron.Squadron_Leaderboard_trade_illicit_highestcontribution,Squadron,Leaderboard trade illicit highest contribution,count
+Squadron.Squadron_Leaderboard_podiums,Squadron,Leaderboard podiums,count
+Crafting.Count_Of_Used_Engineers,Crafting,Count of used engineers,count
+Crafting.Recipes_Generated,Crafting,Recipes generated,count
+Crafting.Recipes_Generated_Rank_1,Crafting,Recipes generated rank 1,count
+Crafting.Recipes_Generated_Rank_2,Crafting,Recipes generated rank 2,count
+Crafting.Recipes_Generated_Rank_3,Crafting,Recipes generated rank 3,count
+Crafting.Recipes_Generated_Rank_4,Crafting,Recipes generated rank 4,count
+Crafting.Recipes_Generated_Rank_5,Crafting,Recipes generated rank 5,count
+Crafting.Suit_Mods_Applied,Crafting,Suit mods applied,count
+Crafting.Weapon_Mods_Applied,Crafting,Weapon mods applied,count
+Crafting.Suits_Upgraded,Crafting,Suits upgraded,count
+Crafting.Weapons_Upgraded,Crafting,Weapons upgraded,count
+Crafting.Suits_Upgraded_Full,Crafting,Suits upgraded full,count
+Crafting.Weapons_Upgraded_Full,Crafting,Weapons upgraded full,count
+Crafting.Suit_Mods_Applied_Full,Crafting,Suit mods applied full,count
+Crafting.Weapon_Mods_Applied_Full,Crafting,Weapon mods applied full,count
+Crew.NpcCrew_TotalWages,Crew,Total wages,credits
+Crew.NpcCrew_Hired,Crew,Hired,count
+Crew.NpcCrew_Fired,Crew,Fired,count
+Crew.NpcCrew_Died,Crew,Died,count
+Multicrew.Multicrew_Time_Total,Multicrew,Time total,seconds
+Multicrew.Multicrew_Gunner_Time_Total,Multicrew,Gunner time total,seconds
+Multicrew.Multicrew_Fighter_Time_Total,Multicrew,Fighter time total,seconds
+Multicrew.Multicrew_Credits_Total,Multicrew,Credits total,credits
+Multicrew.Multicrew_Fines_Total,Multicrew,Fines total,credits
+Material_Trader_Stats.Trades_Completed,Material Trader,Trades completed,count
+Material_Trader_Stats.Materials_Traded,Material Trader,Materials traded,count
+Material_Trader_Stats.Assets_Traded_In,Material Trader,Assets traded in,count
+Material_Trader_Stats.Assets_Traded_Out,Material Trader,Assets traded out,count
+CQC.CQC_Credits_Earned,CQC,Credits earned,credits
+CQC.CQC_Time_Played,CQC,Time played,seconds
+CQC.CQC_KD,CQC,Kill/death ratio,ratio
+CQC.CQC_Kills,CQC,Kills,count
+CQC.CQC_WL,CQC,Win/loss ratio,ratio
+Exobiology.Organic_Genus_Encountered,Exobiology,Organic genus encountered,count
+Exobiology.Organic_Species_Encountered,Exobiology,Organic species encountered,count
+Exobiology.Organic_Variant_Encountered,Exobiology,Organic variant encountered,count
+Exobiology.Organic_Data_Profits,Exobiology,Organic data profits,credits
+Exobiology.Organic_Data,Exobiology,Organic data,count
+Exobiology.First_Logged_Profits,Exobiology,First logged profits,credits
+Exobiology.First_Logged,Exobiology,First logged,count
+Exobiology.Organic_Systems,Exobiology,Organic systems,count
+Exobiology.Organic_Planets,Exobiology,Organic planets,count
+Exobiology.Organic_Genus,Exobiology,Organic genus,count
+Exobiology.Organic_Species,Exobiology,Organic species,count
+Bank_Account.MercCoins_Current,Bank,Merc Coins current,merc_coins
+Bank_Account.MercCoins_Total_Earned,Bank,Merc Coins total earned,merc_coins
+Bank_Account.MercCoins_Total_Spent,Bank,Merc Coins total spent,merc_coins
+Bank_Account.MercCoins_Spent_On_MercGear,Bank,Merc Coins spent on mercgear,merc_coins
+Bank_Account.MercCoins_Spent_On_Engineering,Bank,Merc Coins spent on engineering,merc_coins
+Passengers.Passengers_Missions_Refugee_bulk_delivered,Passengers,Refugee bulk delivered,count
+Squadron.Squadron_Leaderboard_operationscore_highestcontribution,Squadron,Leaderboard operations score highest contribution,count

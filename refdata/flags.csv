@@ -1,0 +1,26 @@
+key,label,auto,affects
+ODYSSEY,Own Odyssey (Odyssey-only ships for credits; on-foot),header:Odyssey,"Panther, Type-11, Mandalay, Caspian, exobiology"
+CONDA2_CREDITS,Anaconda Mk II buyable for credits,,Multirole (new) goal
+NOMAD_CREDITS,Nomad SLV buyable for credits,,Exobiology lander goal
+GUARDIAN_FSD,Guardian FSD Booster unlocked,,Corvette and explorer jump range
+SCO_V1,Own a pre-engineered SCO FSD (V1),,Explorer and Panther range
+SHINRARTA,Shinrarta Dezhra permit (Jameson Memorial),,"Outfitting, Lori Jameson"
+SOL,Sol permit,,Colonel Bris Dekker
+SUMMERLAND,Summerland permit,rank:empire>=7,Imperial Navy Baron
+SIRIUS,Sirius permit (Sirius Corporation invite),,Marco Qwent → Professor Palin
+ALIOTH,Alioth permit (Allied with the Alioth Independents),,Bill Turner
+ACHENAR,Achenar permit (Empire),,Tiana Fortune
+TRAVEL300,Travelled more than 300 ly from career start,stat:Exploration.Greatest_Distance_From_Start>=300,Elvira Martuuk
+TRAVEL5000,Travelled 5000 ly or more from career start,stat:Exploration.Greatest_Distance_From_Start>=5000,"Professor Palin, Chloe Sedesi"
+BLACKMKT5,Sold at 5 or more black markets,stat:Smuggling.Black_Markets_Traded_With>=5,The Dweller
+MARKETS50,Traded at 50 or more markets,stat:Trading.Markets_Traded_With>=50,Lei Cheung
+MINED500,Mined and refined 500 t or more,stat:Mining.Quantity_Mined>=500,Selene Jean
+BOUNTY15,Earned 15 or more bounty vouchers,stat:Combat.Bounties_Claimed>=15,Tod 'The Blaster' McQuinn
+BONDS50,Earned 50 or more combat bonds,stat:Combat.Combat_Bonds>=50,Juri Ishmaak
+EBM_FRIENDLY,Friendly with Eurybia Blue Mafia (plus invite mission),,Liz Ryder
+SIRIUS_INVITE,Invitation from Sirius Corporation,,Marco Qwent
+YORU_INVITE,Invitation from the Party of Yoru,,Zacariah Nemo
+ALLIANCE_FRIENDLY,Friendly with the Alliance,rep:alliance>=35,Bill Turner
+EMPIRE_FRIENDLY,Friendly with the Empire,rep:empire>=35,Tiana Fortune
+FED_FRIENDLY,Friendly with the Federation,rep:federation>=35,Colonel Bris Dekker
+COLONIA_FRIENDLY,Invitation from the Colonia Council,,Mel Brandon

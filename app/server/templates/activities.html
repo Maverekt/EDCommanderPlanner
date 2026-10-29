@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block swap %}data-swap{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Activities</p>
+  <h1>Activities &amp; rates</h1>
+  <p class="muted">Measured from your journal: what you did this session or all time, at what rate, and what it's working toward. Research (routes, hotspots, prices) stays in Inara or Spansh; keep your own favourites here.</p>
+</section>
+
+<div class="act-stack" data-area="activities goals ships live" data-src="/partials/activities?tab={{ atab }}&amp;s={{ which | urlencode }}">
+{% include "partials/activities.html" %}
+</div>
+{% endblock %}

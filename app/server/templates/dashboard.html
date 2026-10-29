@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+{% set cmdr = commanders | selectattr('fid', 'equalto', fid) | first if fid else none %}
+
+{% if not cmdr %}
+<section class="hero">
+  <h1>Welcome, Commander</h1>
+  <p class="muted">Reading your journals for the first time. Your commander appears here as soon as a <code>Commander</code> or <code>LoadGame</code> event is found.</p>
+</section>
+<div class="grid">
+  <section class="panel" data-area="import" data-src="/partials/import">
+    {% include "partials/import.html" %}
+  </section>
+</div>
+{% else %}
+
+<section class="hero">
+  <p class="eyebrow">Commander</p>
+  <h1>{{ cmdr.name }}</h1>
+  <p class="muted">FID {{ cmdr.fid | mask }} · first seen {{ cmdr.first_seen | localtime('%d %b %Y') }} · last seen {{ cmdr.last_seen | localtime }}</p>
+</section>
+
+<div class="grid">
+  <section class="panel panel-wide" data-area="live" data-src="/partials/live">
+    {% include "partials/live.html" %}
+  </section>
+
+  <section class="panel" data-area="import" data-src="/partials/import">
+    {% include "partials/import.html" %}
+  </section>
+
+  {% if plan %}
+  <section class="panel panel-full" data-area="goals live progress ships" data-src="/partials/nextup">
+    {% include "partials/nextup.html" %}
+  </section>
+  {% endif %}
+
+  <section class="panel panel-full" data-area="progress" data-src="/partials/strip">
+    {% include "partials/strip.html" %}
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-head">
+      <h2>Journal activity</h2>
+      <span class="marker">events stored per day · last {{ activity | length }} days</span>
+    </div>
+    <div class="spark" role="img" aria-label="Events stored per day">
+      {% for d in activity %}
+      <div class="spark-col" title="{{ d.day }}: {{ d.n | num }} events">
+        <span class="spark-bar {{ 'empty' if not d.n }}" style="height: {{ [d.pct, 2] | max }}%"></span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="spark-axis muted small">
+      <span>{{ activity[0].day | localtime('%d %b') if activity }}</span><span>{{ activity[-1].day | localtime('%d %b') if activity }}</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>History stored</h2></div>
+    <dl class="kv">
+      <dt>Events</dt><dd>{{ totals.events | num }}</dd>
+      <dt>Event types</dt><dd>{{ totals.types | num }}</dd>
+      <dt>From</dt><dd>{{ totals.first_ts | localtime }}</dd>
+      <dt>To</dt><dd>{{ totals.last_ts | localtime }}</dd>
+      <dt>Provisional</dt><dd>{{ (totals.provisional or 0) | num }}</dd>
+    </dl>
+  </section>
+</div>
+{% endif %}
+{% endblock %}

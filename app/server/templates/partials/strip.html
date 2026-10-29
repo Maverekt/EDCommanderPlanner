@@ -1,0 +1,21 @@
+{% if strip and strip.as_of %}
+<div class="panel-head">
+  <h2>Ranks</h2>
+  <span class="marker">as of login {{ strip.as_of | localtime('%H:%M, %d %b') }} · <a href="/progress">Progress</a></span>
+</div>
+<ul class="strip">
+  {% for r in strip.ranks %}
+  <li class="strip-item {{ 'promo' if r.promotion_available }}">
+    <span class="strip-label">{{ r.label }}</span>
+    <span class="strip-name">{{ r.name }}{% if r.promoted_since_login %} <span class="marker marker-live">● live</span>{% endif %}</span>
+    <span class="mini-bar"><span style="width: {{ r.progress or 0 }}%"></span></span>
+    {% if r.promotion_available %}<span class="tag tag-promo">Promotion available</span>
+    {% elif r.at_max %}<span class="muted small">Max</span>
+    {% else %}<span class="muted small">{{ r.progress if r.progress is not none else '—' }}%</span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="panel-head"><h2>Ranks</h2></div>
+<p class="muted">Ranks appear after the first login is imported.</p>
+{% endif %}

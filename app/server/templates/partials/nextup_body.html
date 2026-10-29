@@ -1,0 +1,9 @@
+{% set s = plan.summary %}
+<dl class="nextup">
+  <dt>Next goal</dt>
+  <dd>{% if s.next_goal %}<strong>{{ s.next_goal.title }}</strong>{% if s.next_goal.name %}: {{ s.next_goal.name }}{% endif %}<br><span class="muted small">{{ s.next_goal.next_step }}</span>
+      {% else %}<span class="muted">{% if plan.goals %}Every goal is done or parked{% else %}No goals yet{% endif %}</span>{% endif %}</dd>
+  {% if plan.engineer_next %}<dt>Next engineer</dt><dd><strong>{{ plan.engineer_next.name }}</strong><br><span class="muted small">{{ plan.engineer_next.next_step }}</span></dd>{% endif %}
+  {% if plan.imperial_step %}<dt>Imperial Navy</dt><dd>{{ plan.imperial_step }}</dd>{% endif %}
+  <dt>Available</dt><dd>{{ s.available | num }} cr <span class="muted small">after a {{ s.reserve_n }}× rebuy reserve</span></dd>
+</dl>

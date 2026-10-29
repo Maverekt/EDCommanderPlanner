@@ -1,0 +1,60 @@
+{% if chain %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>Engineers</h2>
+    <span class="marker">{{ chain.unlocked }} unlocked · {{ chain.maxed }} at G5 · plan: {{ chain.template_name }}</span></div>
+  {% if chain.next %}<p class="goal-next"><span class="muted small">Next engineer:</span> <strong>{{ chain.next.name }}</strong> · {{ chain.next.next_step }}</p>{% endif %}
+  <p class="muted small">Ship engineers refer the next one once you reach grade {{ 3 }} with them. The pin is the blueprint you roll remotely; it starts at the plan's recommendation and you can change it.</p>
+
+  {% for tier, rows in chain.tiers %}
+  <h3 class="sub">{{ tier }}</h3>
+  <ol class="eplan">
+    {% for e in rows %}
+    <li class="eplan-row eng-{{ e.state | lower }} {{ 'eng-max' if e.max }}">
+      <span class="goal-prio">{{ e.priority }}</span>
+      <div class="eplan-main">
+        <div class="eng-head">
+          <span class="eng-name">{{ e.name }}{% if e.max %} <span class="eng-done" title="Grade 5 unlocked" aria-label="Grade 5 unlocked">✓</span>{% endif %}</span>
+          <span class="{{ 'eng-grade' if e.state == 'Unlocked' else 'eng-state' }}">{% if e.state == 'Unlocked' %}{% if e.max %}Grade 5 · Max{% else %}Grade {{ e.grade or 1 }}{% endif %}{% else %}{{ e.state }}{% endif %}</span>
+        </div>
+        {% if e.system %}<div class="eng-loc">{{ e.system }}{% if e.station %} · {{ e.station }}{% endif %}</div>{% endif %}
+        <p class="eplan-next">{{ e.next_step }}</p>
+        {% if e.why %}<p class="muted small">{{ e.why }}</p>{% endif %}
+        {% if not e.max and e.state != 'Unlocked' %}
+        <ul class="reqs small">
+          {% if e.referred_by %}<li class="req req-{{ 'yes' if e.referred else 'no' }}"><span class="req-mark">{{ '✓' if e.referred else '✗' }}</span> Referral: {{ e.referred_by | map(attribute='name') | join(' or ') }}{% if not e.onfoot %} at G3+{% endif %}</li>{% endif %}
+          {% if e.meet_text %}<li class="req req-{{ {True: 'yes', False: 'no'}.get(e.meet.met, 'unknown') }}"><span class="req-mark">{{ {True: '✓', False: '✗'}.get(e.meet.met, '?') }}</span> {{ e.meet_text }}{% if e.meet.detail %} <span class="muted">({{ e.meet.detail }})</span>{% endif %}</li>{% endif %}
+          {% if e.permit %}<li class="req req-{{ e.permit.value }}"><span class="req-mark">{{ {'yes': '✓', 'no': '✗'}.get(e.permit.value, '?') }}</span> {{ e.permit.label }}</li>{% endif %}
+          {% if e.unlock %}<li class="req req-unknown"><span class="req-mark">→</span> Unlock: {{ e.unlock }}</li>{% endif %}
+        </ul>
+        {% endif %}
+        {% if e.tip and not e.max %}<p class="muted small">Where to get it: {{ e.tip }}</p>{% endif %}
+      </div>
+      <div class="eplan-pin">
+        <label class="small muted">Pin
+          <select data-pin-engineer="{{ e.engineer_id }}" aria-label="Pinned blueprint for {{ e.name }}">
+            {% if e.recommended %}<option value="" {{ 'selected' if e.pin_is_recommended }}>★ {{ e.recommended_label }} · recommended</option>{% endif %}
+            {% for o in e.options %}
+            {% if not (e.recommended and o.module_type == e.recommended.module_type and o.blueprint == e.recommended.blueprint) %}
+            <option value="{{ o.module_type }}|{{ o.blueprint }}" {{ 'selected' if not e.pin_is_recommended and e.pin.module_type == o.module_type and e.pin.blueprint == o.blueprint }}>{{ o.label }}</option>
+            {% endif %}
+            {% endfor %}
+          </select></label>
+        {% if not e.pin_is_recommended %}<button type="button" class="btn btn-ghost small" data-post="/api/engineers/{{ e.engineer_id }}/pin" data-body='{"pin": ""}'>Reset to recommended</button>{% endif %}
+        {% if e.pin_note %}<p class="muted small">{{ e.pin_note }}</p>{% endif %}
+        {% if e.alt_label %}<p class="muted small">Alternative: {{ e.alt_label }}</p>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  {% endfor %}
+
+  {% if chain.others %}
+  <details class="eplan-others toggle small">
+    <summary>Engineers not in the plan ({{ chain.others | length }})</summary>
+    <ul class="list-plain small">
+      {% for e in chain.others %}<li><strong>{{ e.name }}</strong> <span class="muted">· {{ e.state }}{% if e.system %} · {{ e.system }}{% endif %}</span> — {{ e.next_step }}{% if e.referral_task and e.state == 'Unlocked' %} <span class="muted">(referral task: {{ e.referral_task }})</span>{% endif %}</li>{% endfor %}
+    </ul>
+  </details>
+  {% endif %}
+</section>
+{% endif %}

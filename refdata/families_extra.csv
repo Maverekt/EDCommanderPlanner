@@ -1,0 +1,30 @@
+symbol,family,reason
+unknownenergysource,Thargoid,FDevIDs category None (Sensor Fragment)
+unknownshipsignature,Thargoid,FDevIDs category None
+unknownwakedata,Thargoid,FDevIDs category None
+unknowncarapace,Thargoid,FDevIDs category None
+unknownenergycell,Thargoid,FDevIDs category None
+unknownorganiccircuitry,Thargoid,FDevIDs category None
+unknowntechnologycomponents,Thargoid,FDevIDs category None
+tg_compositiondata,Thargoid,FDevIDs category None
+tg_residuedata,Thargoid,FDevIDs category None
+tg_structuraldata,Thargoid,FDevIDs category None
+tg_biomechanicalconduits,Thargoid,FDevIDs category None
+tg_propulsionelement,Thargoid,FDevIDs category None
+tg_weaponparts,Thargoid,FDevIDs category None
+tg_wreckagecomponents,Thargoid,FDevIDs category None
+tg_shipflightdata,Thargoid,FDevIDs category None
+tg_shipsystemsdata,Thargoid,FDevIDs category None
+ancientlanguagedata,Guardian,FDevIDs category None (obelisk data)
+ancientbiologicaldata,Guardian,FDevIDs category None (obelisk data)
+ancientculturaldata,Guardian,FDevIDs category None (obelisk data)
+ancienthistoricaldata,Guardian,FDevIDs category None (obelisk data)
+ancienttechnologicaldata,Guardian,FDevIDs category None (obelisk data)
+guardian_powercell,Guardian,FDevIDs category None
+guardian_powerconduit,Guardian,FDevIDs category None
+guardian_techcomponent,Guardian,FDevIDs category None
+guardian_sentinel_weaponparts,Guardian,FDevIDs category None
+guardian_sentinel_wreckagecomponents,Guardian,FDevIDs category None
+guardian_weaponblueprint,Guardian,FDevIDs category None
+guardian_moduleblueprint,Guardian,FDevIDs category None
+guardian_vesselblueprint,Guardian,FDevIDs category None

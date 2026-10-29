@@ -1,0 +1,39 @@
+engineer_id,referred_by,meet,meet_rule,unlock,permit,referral_task,source
+300100,,Exploration rank Scout or higher,rank:explore>=2,1 Meta-Alloys,,,inara
+300160,,Max distance of 300 ly or more from career start,flag:TRAVEL300,3 Soontill Relics,,,inara
+300180,,Deal with at least 5 black markets,flag:BLACKMKT5,"Pay 500,000 Cr",,,inara
+300260,,Earn more than 15 bounty vouchers,flag:BOUNTY15,"100,000 Cr of bounty vouchers",,,inara
+300080,,Cordial or Friendly with Eurybia Blue Mafia,flag:EBM_FRIENDLY,200 Landmines,,,inara
+300250,300100,Claim more than 50 federal combat bonds,flag:BONDS50,"100,000 or 1,000,000 Cr of federal combat bonds",,,inara
+300140,300250,Friendly with the Federation,flag:FED_FRIENDLY,"1,000,000 or 10,000,000 Cr of federal combat bonds",SOL,,inara
+300040,300250,Federal Navy Midshipman or higher,rank:federation>=3,50 Aberrant Shield Pattern Analysis,,,inara
+300280,300160,Invitation from the Colonia Council,flag:COLONIA_FRIENDLY,"100,000 Cr of bounty vouchers",,,inara
+300050,300160,Invitation from the Party of Yoru,flag:YORU_INVITE,25 Xihe Companions,,,inara
+300200,300160,Invitation from Sirius Corporation,flag:SIRIUS_INVITE,25 Modular Terminals,SIRIUS,,inara
+300300,300200,Max distance of 5000 ly or more from career start,flag:TRAVEL5000,25 Sensor Fragments,,,inara
+300230,300200,Combat rank Dangerous or higher,rank:combat>=6,25 Konnga Ale,SHINRARTA,,inara
+300220,300200,Max distance of 5000 ly or more from career start,flag:TRAVEL5000,25 Sensor Fragments,,,inara
+300150,300180,Exploration rank Surveyor or higher,rank:explore>=3,10 mined Osmium,,,inara
+300120,300180,Traded in over 50 markets,flag:MARKETS50,200 Gold,,,inara
+300110,300120,Exploration rank Surveyor or higher,rank:explore>=3,50 Classified Scan Databanks,,,inara
+300130,300260,Combat rank Expert or higher,rank:combat>=4,200 Progenitor Cells,,,inara
+300210,300260,Mine at least 500 t of ore,flag:MINED500,10 mined Painite,,,inara
+300010,300210,Friendly with the Alliance (and Allied with the Alioth Independents for the permit),flag:ALLIANCE_FRIENDLY,50 Bromellite,ALIOTH,,inara
+300000,300210,Trade rank Merchant or higher,rank:trade>=4,50 Lavian Brandy,,,inara
+300290,300080,Trade rank Dealer or higher,rank:trade>=3,25 Occupied Escape Pods,,,inara
+300090,300080,Imperial Navy Outsider or higher,rank:empire>=1,50 Kamitra Cigars,,,inara
+300030,300090,Combat rank Competent or higher,rank:combat>=3,50 Fujin Tea,,,inara
+300270,300090,Friendly with the Empire,flag:EMPIRE_FRIENDLY,50 Decoded Emission Data,ACHENAR,,inara
+400003,,Complete 10 surface conflict zones,,,,Provide 5 Settlement Defence Plans,inara
+400005,400003,Sell 15 Multimedia Entertainment / Classic Entertainment / Cat Media to bartenders,,,,Provide 5 Insight Entertainment Suites,inara
+400007,400005,Reach Unfriendly or lower with Sirius Corporation,,,,,inara
+400001,,Complete 10 Restore or Reactivation missions,,,,Provide 5 Genetic Repair Meds,inara
+400006,400001,Complete 6 covert theft or covert heist missions,,,,Provide 15 Financial Projections,inara
+400008,400006,Sell 20 Biological Sample / Employee Genetic Data / Genetic Research to bartenders,,,,,inara
+400002,,Travel at least 100 ly in shuttles,,,,Provide 5 doses of Push,inara
+400004,400002,Sell 5 Opinion Polls to bartenders,,,,Provide 5 Surveillance Equipment,inara
+400009,400004,Sell 5 Smear Campaign Plans to bartenders,,,,,inara
+400011,,Visit 5 settlements in the Colonia system,,,,Provide 10 Digital Designs,inara
+400012,,Sell 10 Culinary Recipes or Cocktail Recipes to stations in Colonia,,,,Provide 10 Manufacturing Instructions,inara
+400010,,Friendly with the Colonia Council,,,,Provide 10 Faction Associates,inara
+400013,400010;400011;400012,"Complete the referral tasks for Baltanos, Eleanor Bresa and Rosa Dayette",,,,,inara

@@ -1,0 +1,28 @@
+category,label,stat_counters,note
+trade,Trading,Trading.Market_Profits,"Statistics counts profit on cargo sold; the ledger counts cash in and out, so the two differ while cargo is held"
+smuggling,Smuggling,Smuggling.Black_Markets_Profits,Same profit-versus-cash difference as trade
+missions,Missions,,No Statistics counter
+bounties,Bounties,Combat.Bounty_Hunting_Profit,
+combat_bonds,Combat bonds,Combat.Combat_Bond_Profits;Combat.OnFoot_Combat_Bonds_Profits,
+vouchers,Other vouchers,,
+exploration,Exploration,Exploration.Exploration_Profits,
+exobiology,Exobiology,Exobiology.Organic_Data_Profits,
+community_goals,Community goals,,
+search_rescue,Search & rescue,Search_And_Rescue.SearchRescue_Profit,
+ships,Ships,Bank_Account.Spent_On_Ships,Statistics counts purchases only; the ledger also counts sales and transfers
+modules,Modules,Bank_Account.Spent_On_Outfitting,Statistics counts purchases only; the ledger also counts sales
+repairs,Repairs,Bank_Account.Spent_On_Repairs,
+fuel,Fuel,Bank_Account.Spent_On_Fuel,
+ammo,Ammo & restock,Bank_Account.Spent_On_Ammo_Consumables,
+limpets,Limpets,,Statistics has no limpet counter
+rebuy,Rebuy,Bank_Account.Spent_On_Insurance,
+fines,Fines & bounties paid,,
+crew,Crew wages,Crew.NpcCrew_TotalWages,
+data,Data purchases,,
+shuttles,Taxis & dropships,Exploration.Spent_On_Shuttles,
+suits,Suits,Bank_Account.Spent_On_Suits,
+weapons,Weapons,Bank_Account.Spent_On_Weapons,
+suit_consumables,Suit consumables,Bank_Account.Spent_On_Suit_Consumables,
+powerplay,Powerplay,,
+carrier,Fleet carrier,,
+unattributed,Unattributed,,"The gap between consecutive LoadGame balances that no mapped event explains (DESIGN §9.3)"

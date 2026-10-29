@@ -1,0 +1,80 @@
+{% if not mats or not mats.login_ts %}
+<section class="panel panel-empty"><p class="muted">No <code>Materials</code> event stored yet. The game writes one at every login.</p></section>
+{% else %}
+{% macro mat_family(heading, rows) %}
+  <div class="mat-family">
+    <h3>{{ heading }}</h3>
+    <ul class="mats">
+      {% for m in rows %}
+      <li class="mat {{ 'mat-full' if m.full else 'mat-near' if m.near }} {{ 'mat-zero' if not m.count }}"
+          {% if m.sources %}tabindex="0" title="Where to find {{ m.name }}:&#10;{% for s in m.sources %}• {{ s }}&#10;{% endfor %}"{% endif %}>
+        <span class="mat-grade" title="Grade {{ m.grade }}">G{{ m.grade }}</span>
+        <span class="mat-name">{{ m.name }}{% if m.specific %} <span class="src-mark" aria-hidden="true">ⓘ</span>{% endif %}{% if m.live %} <span class="live-dot" title="Changed since login">●</span>{% endif %}</span>
+        <span class="mat-count">{% if m.today %}<span class="mat-today" title="Gained today (since {{ mats.today_since | localtime('%H:%M, %d %b') }}): pickups, trades and mission rewards">+{{ m.today }}</span> {% endif %}{% if m.plan %}<span class="mat-need {{ 'short' if m.plan.short }}" title="Your engineering plan needs {{ m.plan.need }}{% if m.plan.short %}; {{ m.plan.short }} short{% endif %}">need {{ m.plan.need }} · </span>{% endif %}{{ m.count }}<span class="muted">/{{ m.cap }}</span></span>
+        <span class="mat-bar"><span style="width: {{ m.pct }}%"></span></span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endmacro %}
+{% set xeno = ('Guardian', 'Thargoid') %}
+<p class="muted small">Hover a material for where to find it{% if hover_cards %} <em>(click inside the card to keep it open and copy from it)</em>{% endif %}. <span class="src-mark">ⓘ</span> marks materials with a specific source; the rest show general advice for their type. Notes live in <code>refdata/material_sources.csv</code>.</p>
+{% if eplan and eplan.materials %}
+{% set covered = eplan.need_units - eplan.short_units %}
+<details class="panel panel-wide eplan-mats">
+  <summary class="ship-summary">
+  <div class="panel-head"><h2>Engineering plan</h2>
+    <span class="marker">{% if eplan.short %}{{ eplan.short_count }} materials · {{ eplan.short_units | num }} units short{% else %}<span class="pos">everything covered</span>{% endif %} · <a href="/goals">edit the plan</a></span></div>
+  <div class="eplan-overview">
+    <div class="eplan-cover"><span class="mat-bar"><span style="width: {{ (100 * covered / eplan.need_units) | round | int if eplan.need_units else 100 }}%"></span></span>
+      <span class="small">{{ covered | num }} of {{ eplan.need_units | num }} units in hand ({{ (100 * covered / eplan.need_units) | round | int if eplan.need_units else 100 }}%) across {{ eplan.materials | length }} materials</span></div>
+    {% if eplan.short %}
+    <p class="small">Short by type:
+      {% set by_type = eplan.short | groupby('type') | list %}{% set by_type = dict(by_type) %}
+      {% for mtype in ('Raw', 'Manufactured', 'Encoded') if mtype in by_type %}<strong>{{ mtype }}</strong> {{ by_type[mtype] | sum(attribute='short') | num }}{% if not loop.last %} · {% endif %}{% endfor %}
+      <span class="muted">— most short:</span>
+      {% for m in (eplan.short | sort(attribute='short', reverse=true))[:3] %}{{ m.name }} <span class="neg">{{ m.short }}</span>{% if not loop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+  </div>
+  </summary>
+  {% if eplan.short %}
+  <div class="table-scroll"><table class="table shortfalls table-compact">
+    <thead><tr><th>Material</th><th>Type</th><th class="num">Have</th><th class="num">Need</th><th class="num">Short</th><th>Where to get it</th></tr></thead>
+    <tbody>
+    {% for m in eplan.short %}
+    <tr title="Where to find {{ m.name }}:&#10;{% for s in m.sources %}• {{ s }}&#10;{% endfor %}">
+      <td>{{ m.name }} <span class="muted small">G{{ m.grade }}</span></td>
+      <td class="muted small">{{ m.type }}{% if m.family and m.type != 'Raw' %} · {{ m.family }}{% endif %}</td>
+      <td class="num">{{ m.have }}</td><td class="num">{{ m.need }}</td><td class="num neg">{{ m.short }}</td>
+      <td class="small muted">{{ m.sources[0] if m.sources else '' }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p class="muted small">Hover a row for every known source. A need above a material's cap (300 at G1 down to 100 at G5) means farming and spending in batches.</p>
+  {% endif %}
+</details>
+{% endif %}
+<div class="mat-layout">
+  {% for mtype, families in mats.groups.items() %}
+  <section class="panel mat-{{ mtype | lower }}">
+    <div class="panel-head">
+      <h2>{{ mtype }}</h2>
+      <span class="marker">{% if mats.today[mtype] %}<span class="mat-today" title="Units of {{ mtype | lower }} materials gained today (since {{ mats.today_since | localtime('%H:%M, %d %b') }})">+{{ mats.today[mtype] | num }} today</span> · {% endif %}{% if mtype == 'Raw' %}by trader column{% else %}by family{% endif %}</span>
+    </div>
+    <div class="mat-families">
+    {% for family, rows in families if family not in xeno %}{{ mat_family(family, rows) }}{% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  <section class="panel mat-xeno">
+    <div class="panel-head"><h2>Guardian &amp; Thargoid</h2><span class="marker">manufactured and encoded · not swapped at material traders</span></div>
+    <div class="mat-families">
+    {% for mtype, families in mats.groups.items() %}{% for family, rows in families if family in xeno %}{{ mat_family(family ~ ' · ' ~ mtype, rows) }}{% endfor %}{% endfor %}
+    </div>
+  </section>
+</div>
+{% if mats.unknown %}
+<p class="small warn">Not in reference data: {% for u in mats.unknown %}<code>{{ u.symbol }}</code> ({{ u.count }}){% if not loop.last %}, {% endif %}{% endfor %}</p>
+{% endif %}
+{% endif %}

@@ -1,0 +1,21 @@
+{# Server-rendered SVG line chart. Expects `chart` from app.server.charts.line_chart and `title`. #}
+{% macro line(chart, title, unit='') %}
+{% if chart %}
+<figure class="chart">
+  <svg viewBox="0 0 {{ chart.width }} {{ chart.height }}" role="img" aria-label="{{ title }}: {{ chart.count }} points from {{ chart.first | localtime('%d %b %Y') }} to {{ chart.last | localtime('%d %b %Y') }}">
+    {% for t in chart.yticks %}
+    <line class="grid" x1="{{ chart.pad_l }}" x2="{{ chart.width - chart.pad_r }}" y1="{{ t.y }}" y2="{{ t.y }}"/>
+    <text class="tick" x="{{ chart.pad_l - 6 }}" y="{{ t.y + 3 }}" text-anchor="end">{{ t.label }}</text>
+    {% endfor %}
+    <polyline class="line" points="{{ chart.path }}"/>
+    {% for p in chart.points %}
+    <circle class="pt" cx="{{ p.x }}" cy="{{ p.y }}" r="3"><title>{{ p.ts | localtime }} · {{ p.label }}{{ unit }}</title></circle>
+    {% endfor %}
+    <text class="tick" x="{{ chart.pad_l }}" y="{{ chart.height - 6 }}">{{ chart.first | localtime('%d %b %Y') }}</text>
+    <text class="tick" x="{{ chart.width - chart.pad_r }}" y="{{ chart.height - 6 }}" text-anchor="end">{{ chart.last | localtime('%d %b %Y') }}</text>
+  </svg>
+</figure>
+{% else %}
+<p class="muted">No data in this range.</p>
+{% endif %}
+{% endmacro %}

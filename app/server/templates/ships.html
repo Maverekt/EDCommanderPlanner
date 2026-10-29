@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block reload_areas %}ships{% endblock %}
+{% macro share_fit(share, box) %}
+<span class="share-fit" aria-label="Share this fit">
+  <span class="label">Share</span>
+  <a class="btn btn-ghost small" href="{{ share.edsy }}" target="_blank" rel="noopener noreferrer">Open in EDSY ↗</a>
+  <a class="btn btn-ghost small" href="{{ share.coriolis }}" target="_blank" rel="noopener noreferrer">Open in Coriolis ↗</a>
+  <button type="button" class="btn btn-ghost small" data-copy="{{ box }}">Copy SLEF</button>
+</span>
+<textarea id="{{ box }}" class="slef-text" rows="6" readonly hidden aria-label="SLEF for this fit">{{ share.slef }}</textarea>
+{% endmacro %}
+{% block content %}
+{% set fc = carrier %}
+<section class="carrier-bar" aria-label="Fleet carrier">
+  <span class="carrier-label">Fleet carrier</span>
+  {% if not fc %}
+  <span class="muted">No fleet carrier</span>
+  {% elif fc.gone %}
+  <span class="muted">No fleet carrier · {{ fc.name or fc.callsign }} was decommissioned {{ fc.scrapped | localtime('%d %b %Y') }}</span>
+  {% else %}
+  <span class="carrier-name"><strong>{{ fc.name or 'Unnamed' }}</strong>{% if fc.callsign %} <code>{{ fc.callsign }}</code>{% endif %}{% if fc.system %} · {{ fc.system }}{% endif %}</span>
+  {% if fc.jump %}<span class="chip">Jumping to {{ fc.jump.to }} at {{ fc.jump.at | localtime('%H:%M') }}</span>{% endif %}
+  <span class="chip chip-money">Balance {% if fc.balance is not none %}{{ fc.balance | num }} cr{% else %}—{% endif %}</span>
+  <span class="chip chip-money" title="{{ fc.upkeep_note }}">Upkeep ≈ {{ fc.upkeep | num }} cr/week</span>
+  {% if fc.weeks_left is not none %}<span class="chip {{ 'chip-warn' if fc.weeks_left < 4 }}" title="Balance ÷ estimated upkeep, from {{ fc.as_of | localtime }}">Funds last ≈ {{ '%.1f' | format(fc.weeks_left) }} weeks · to {{ fc.funds_end | localtime('%d %b %Y') }}</span>{% endif %}
+  {% if fc.fuel is not none %}<span class="chip">Tritium {{ fc.fuel | num }} t</span>{% endif %}
+  {% if fc.free_space is not none %}<span class="chip">Free space {{ fc.free_space | num }}{% if fc.capacity %} / {{ fc.capacity | num }}{% endif %} t</span>{% endif %}
+  {% if fc.scrap_at %}<span class="chip chip-warn">Decommissioning {{ fc.scrap_at | localtime('%d %b %H:%M') }}</span>{% endif %}
+  <span class="carrier-services small">{% if fc.active %}Services: {{ fc.active | join(', ') }}{% else %}<span class="muted">Core services only</span>{% endif %}{% if fc.suspended %} <span class="muted">· suspended: {{ fc.suspended | join(', ') }}</span>{% endif %}{% if fc.ship_packs or fc.module_packs %} <span class="muted">· packs: {{ fc.ship_packs }} ship, {{ fc.module_packs }} module</span>{% endif %}{% if not fc.seen_stats %} <span class="muted">· open Carrier Management in game for the full picture</span>{% endif %}
+    <span class="muted carrier-asof">as of {{ fc.as_of | localtime }}</span></span>
+  {% endif %}
+</section>
+<section class="hero">
+  <p class="eyebrow">Ships</p>
+  <h1>Fleet &amp; fits</h1>
+  <p class="muted">Each ship's fit as of its most recent <code>Loadout</code>, with engineering per slot. Cosmetic slots are left out. Save a fit to keep it before you refit in game: each saved fit gets a tab showing what's different from now and where each module is. Share a fit by opening it in EDSY or Coriolis, or copy it as SLEF for either one's Import.</p>
+</section>
+
+{% if fits | length > 1 %}<p class="ship-toggle small"><button type="button" class="btn btn-ghost" data-ships-toggle="open">Expand all</button>
+  <button type="button" class="btn btn-ghost" data-ships-toggle="close">Collapse all</button></p>{% endif %}
+{% for s in fits %}
+<details class="panel ship-panel" {{ 'open' if s.current }}>
+  <summary class="ship-summary">
+    <div class="panel-head">
+      <h2>{{ s.type_name }}{% if s.name %} · “{{ s.name }}”{% endif %}{% if s.ident %} · {{ s.ident }}{% endif %}</h2>
+      <span class="marker">{% if s.current %}<span class="marker-live">current ship · </span>{% endif %}{{ s.engineered }} of {{ s.modules }} engineered · as of {{ s.as_of | localtime }}</span>
+    </div>
+    <div class="ship-chips">
+      {% for x in s.summary %}<span class="chip {{ 'chip-eng' if x.grade }}" {% if x.blueprint %}title="{{ x.blueprint }} G{{ x.grade }}"{% endif %}>{{ x.label }}{% if x.grade %} <span class="chip-grade">G{{ x.grade }}</span>{% endif %}</span>{% endfor %}
+      {% if s.value %}<span class="chip chip-money">Value {{ s.value | num }} cr</span>{% endif %}
+      {% if s.rebuy %}<span class="chip chip-money">Rebuy {{ s.rebuy | num }} cr</span>{% endif %}
+    </div>
+  </summary>
+  <div class="fit-tabs" role="tablist" aria-label="Fits for this ship" data-fit-tabs="{{ s.ship_id }}">
+    <button type="button" role="tab" class="subtab active" data-fit-tab="current" aria-selected="true">Current</button>
+    {% for f in s.saved_fits %}<button type="button" role="tab" class="subtab" data-fit-tab="{{ f.id }}" aria-selected="false"><span data-fit-label>{{ f.name }}</span>{% if f.matches %} <span class="marker-live">· fitted</span>{% endif %}</button>{% endfor %}
+    {% if s.share %}<button type="button" class="btn btn-ghost small" data-fit-save="{{ s.ship_id }}">Save current fit</button>{% endif %}
+    <span class="form-error warn small" hidden></span>
+    <div class="fit-actions" data-fit-actions="current">
+      {% if s.share %}{{ share_fit(s.share, 'slef-' ~ s.ship_id) }}{% endif %}
+      <button type="button" class="btn btn-ghost small" data-post="/api/builds/from-ship" data-body='{"ship_id": {{ s.ship_id }}}'
+              title="Copies this fit into Builds at the bottom of the page, where it can be attached to a ship goal or its engineering added to the plan">Add to builds</button>
+    </div>
+    {% for f in s.saved_fits %}
+    <div class="fit-actions" data-fit-actions="{{ f.id }}" hidden>
+      {{ share_fit(f.share, 'slef-fit-' ~ f.id) }}
+      <button type="button" class="btn btn-ghost small" data-fit-delete="{{ f.id }}" data-name="{{ f.name }}">Delete</button>
+    </div>
+    {% endfor %}
+  </div>
+  <div data-fit-panel="current">
+  <div class="fit-grid">
+    {% for group, rows in s.groups %}
+    <div class="fit-group">
+      <h3>{{ group }}</h3>
+      <ul class="fit">
+        {% for m in rows %}
+        <li class="slot {{ 'eng' if m.blueprint }}">
+          <div class="slot-head">
+            <span class="slot-class">{{ m.class }}</span>
+            <span class="slot-name">{{ m.name }}{% if m.mount %} <span class="muted small">{{ m.mount }}</span>{% endif %}</span>
+          </div>
+          {% if m.blueprint %}
+          <div class="slot-eng">
+            {{ m.blueprint }} G{{ m.grade }}{% if m.quality is not none %} · {{ (m.quality * 100) | round | int }}%{% endif %}
+            {% if m.experimental %} · <span class="exp">{{ m.experimental }}</span>{% endif %}
+            {% if m.engineer %}<span class="muted small"> · {{ m.engineer }}</span>{% endif %}
+          </div>
+          {% if m.modifiers %}
+          <details class="toggle small"><summary>Stats</summary>
+            <div class="table-scroll"><table class="table mods table-compact"><tbody>
+            {% for x in m.modifiers %}<tr><td>{{ x.label }}</td><td class="num muted">{{ x.before }}</td><td class="num {{ 'pos' if x.better else 'neg' if x.better == false }}">{{ x.after }}</td><td class="num {{ 'pos' if x.better else 'neg' if x.better == false }}">{% if x.pct is not none %}{{ '%+.1f' | format(x.pct) }}%{% endif %}</td></tr>{% endfor %}
+            </tbody></table></div>
+          </details>
+          {% endif %}
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+  </div>
+  {% for f in s.saved_fits %}
+  <div data-fit-panel="{{ f.id }}" hidden>
+    <div class="build-controls">
+      <label class="fit-name">Name <input type="text" value="{{ f.name }}" maxlength="40" required data-fit-rename="{{ f.id }}"></label>
+    </div>
+    <p class="fit-summary"><span class="{{ 'pos' if f.matches }}">{{ f.summary }}</span> <span class="muted small">· saved {{ f.saved | localtime }}{% if storage_as_of %} · storage as of {{ storage_as_of | localtime }}{% endif %}</span></p>
+    {% if not f.matches %}<label class="check small"><input type="checkbox" data-fit-all> Show slots that already match</label>{% endif %}
+    <div class="table-scroll"><table class="table fit-compare {{ '' if f.matches else 'only-changes' }}">
+      <thead><tr><th>Slot</th><th>This fit</th><th>Fitted now</th><th>To refit</th></tr></thead>
+      <tbody>
+      {% for r in f.rows %}
+      <tr class="fit-{{ r.status }}">
+        <td>{{ r.label }}</td>
+        <td>{{ r.saved or '—' }}{% if r.saved_eng %}<div class="muted small">{{ r.saved_eng }}</div>{% endif %}</td>
+        <td>{{ r.now or '—' }}{% if r.now_eng %}<div class="muted small">{{ r.now_eng }}</div>{% endif %}</td>
+        <td class="fit-note">{% if r.status == 'fitted' %}<span class="muted">Fitted</span>{% else %}{{ r.note }}{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </div>
+  {% endfor %}
+</details>
+{% else %}
+<section class="panel panel-empty"><p class="muted">No <code>Loadout</code> stored yet. The game writes one whenever your ship's fit changes.</p></section>
+{% endfor %}
+
+<div data-area="goals materials" data-src="/partials/builds">
+{% include "partials/builds.html" %}
+</div>
+{% endblock %}

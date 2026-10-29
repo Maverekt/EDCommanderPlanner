@@ -1,0 +1,481 @@
+{
+ "name": "Engineer Plan Example",
+ "source": "the author's progression workbook (Engineers and Pin List), 25 Oct 2026",
+ "engineers": [
+  {
+   "engineer_id": 300100,
+   "priority": 1,
+   "tier": "1 · Panther",
+   "why": "G5 Increased Range FSD for every ship. Refers Juri Ishmaak.",
+   "tip": "Darnielle's Progress, Maia (~113k Cr in 2021) or Merope 2 A barnacles",
+   "shortcut": "Sell exploration data",
+   "pin": {
+    "module_type": "fsd",
+    "blueprint": "fsd_longrange",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "t",
+    "blueprint": "engine_dirty",
+    "grade": 3
+   },
+   "pin_note": "Every ship wants it; pin here so Elvira's slot is free"
+  },
+  {
+   "engineer_id": 300160,
+   "priority": 2,
+   "tier": "1 · Panther",
+   "why": "Second FSD engineer. Refers Marco Qwent, Zacariah Nemo, Mel Brandon.",
+   "tip": "Cheranovsky City, Ngurii (rare)",
+   "shortcut": "Sell exploration data",
+   "pin": {
+    "module_type": "sg",
+    "blueprint": "shieldgenerator_reinforced",
+    "grade": 3
+   },
+   "alt_pin": {
+    "module_type": "fsd",
+    "blueprint": "fsd_longrange",
+    "grade": 5
+   },
+   "pin_note": "Her G5 FSD would duplicate Felicity's pin"
+  },
+  {
+   "engineer_id": 300180,
+   "priority": 3,
+   "tier": "2 · Conda defence",
+   "why": "Charge Enhanced distributor. Refers Lei Cheung, Marsha Hicks.",
+   "tip": "Pay at the workshop",
+   "shortcut": "Sell commodities ✔",
+   "pin": {
+    "module_type": "pd",
+    "blueprint": "powerdistributor_highfrequency",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "pl",
+    "blueprint": "weapon_efficient",
+    "grade": 4
+   },
+   "pin_note": "Biggest single upgrade for combat ships"
+  },
+  {
+   "engineer_id": 300120,
+   "priority": 4,
+   "tier": "2 · Conda defence",
+   "why": "G5 shields. Refers Ram Tah.",
+   "tip": "Any Laksak station — one Panther load",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "sg",
+    "blueprint": "shieldgenerator_reinforced",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "ss",
+    "blueprint": "sensor_expanded",
+    "grade": 5
+   },
+   "pin_note": "Core survivability for Anaconda/Corvette"
+  },
+  {
+   "engineer_id": 300260,
+   "priority": 5,
+   "tier": "2 · Conda defence",
+   "why": "Multi-cannons. Refers Selene Jean, Petra Olmanova.",
+   "tip": "Wolf 397 nav beacon",
+   "shortcut": "Hand in Alliance vouchers",
+   "pin": {
+    "module_type": "mc",
+    "blueprint": "weapon_overcharged",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "rg",
+    "blueprint": "weapon_longrange",
+    "grade": 5
+   },
+   "pin_note": "Your main hull-killing weapon"
+  },
+  {
+   "engineer_id": 300210,
+   "priority": 6,
+   "tier": "2 · Conda defence",
+   "why": "Heavy Duty armour/HRPs. Refers Didi Vatermann, Bill Turner.",
+   "tip": "Laser-mine metallic rings (Mining tab)",
+   "shortcut": "Sell commodities & data ✔",
+   "pin": {
+    "module_type": "hr",
+    "blueprint": "hullreinforcement_heavyduty",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "bh",
+    "blueprint": "armour_heavyduty",
+    "grade": 5
+   },
+   "pin_note": "You'll fit several HRPs on the Corvette/Cutter"
+  },
+  {
+   "engineer_id": 300000,
+   "priority": 7,
+   "tier": "2 · Conda defence",
+   "why": "G5 Heavy Duty boosters.",
+   "tip": "Lave Station (rare, ~12 t per visit)",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "sb",
+    "blueprint": "shieldbooster_heavyduty",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "sb",
+    "blueprint": "shieldbooster_resistive",
+    "grade": 5
+   },
+   "pin_note": "Boosters are the best shield-per-material upgrade"
+  },
+  {
+   "engineer_id": 300080,
+   "priority": 8,
+   "tier": "3 · Corvette prep",
+   "why": "Gateway to Hera Tani and Etienne Dorn.",
+   "tip": "Inara commodity search",
+   "shortcut": "Sell commodities ✔",
+   "pin": {
+    "module_type": "mr",
+    "blueprint": "weapon_highcapacity",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "tp",
+    "blueprint": "weapon_sturdy",
+    "grade": 5
+   },
+   "pin_note": "Only matters if you run missiles — she's mainly the route to Hera"
+  },
+  {
+   "engineer_id": 300090,
+   "priority": 9,
+   "tier": "3 · Corvette prep",
+   "why": "G5 Overcharged power plant. Refers Broo Tarquin, Tiana Fortune.",
+   "tip": "Kamitra (rare, ~14 t per visit)",
+   "shortcut": "Sell commodities ✔",
+   "pin": {
+    "module_type": "pp",
+    "blueprint": "powerplant_boosted",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "ss",
+    "blueprint": "sensor_expanded",
+    "grade": 5
+   },
+   "pin_note": "Power for a full Corvette loadout"
+  },
+  {
+   "engineer_id": 300030,
+   "priority": 10,
+   "tier": "3 · Corvette prep",
+   "why": "G5 lasers.",
+   "tip": "Fujin (rare, ~15 t per visit)",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "bl",
+    "blueprint": "weapon_efficient",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "ul",
+    "blueprint": "weapon_focused",
+    "grade": 5
+   },
+   "pin_note": "Beams strip shields; Efficient keeps heat & draw low"
+  },
+  {
+   "engineer_id": 300200,
+   "priority": 11,
+   "tier": "3 · Corvette prep",
+   "why": "Grindy gateway to Palin, Lori Jameson, Chloe Sedesi.",
+   "tip": "Mission rewards (data deliveries)",
+   "shortcut": "Sell commodities ✔",
+   "pin": {
+    "module_type": "pp",
+    "blueprint": "powerplant_boosted",
+    "grade": 4
+   },
+   "alt_pin": {
+    "module_type": "pd",
+    "blueprint": "powerdistributor_priorityengines",
+    "grade": 3
+   },
+   "pin_note": "Backup PP pin (Hera covers G5)"
+  },
+  {
+   "engineer_id": 300220,
+   "priority": 12,
+   "tier": "3 · Corvette prep",
+   "why": "G5 Dirty Drives.",
+   "tip": "HIP 17403 A 4 A crashed Thargoid ship (check it's active)",
+   "shortcut": "Sell exploration data",
+   "pin": {
+    "module_type": "t",
+    "blueprint": "engine_dirty",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "t",
+    "blueprint": "engine_tuned",
+    "grade": 5
+   },
+   "pin_note": "Speed/agility on every ship"
+  },
+  {
+   "engineer_id": 300110,
+   "priority": 13,
+   "tier": "4 · Later / mining",
+   "why": "Corvette utilities + mining limpets.",
+   "tip": "Encoded data — scans / material trader",
+   "shortcut": "Sell exploration data",
+   "pin": {
+    "module_type": "hs",
+    "blueprint": "misc_heatsinkcapacity",
+    "grade": 1
+   },
+   "alt_pin": {
+    "module_type": "po",
+    "blueprint": "misc_pointdefensecapacity",
+    "grade": 1
+   },
+   "pin_note": "Useful on combat ships and explorers (neutron boosting)"
+  },
+  {
+   "engineer_id": 300250,
+   "priority": 14,
+   "tier": "4 · Later / mining",
+   "why": "Gateway to The Sarge and Bris Dekker. (KWS leaving in Dec.)",
+   "tip": "Conflict zones",
+   "shortcut": "Hand in combat bonds",
+   "pin": {
+    "module_type": "s",
+    "blueprint": "sensor_longrange",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "ss",
+    "blueprint": "sensor_expanded",
+    "grade": 5
+   },
+   "pin_note": "Better targeting range in combat"
+  },
+  {
+   "engineer_id": 300040,
+   "priority": 15,
+   "tier": "4 · Later / mining",
+   "why": "G5 mining limpets. You meet the rank.",
+   "tip": "Encoded data — shield scans / trader",
+   "shortcut": "Sell exploration data",
+   "pin": {
+    "module_type": "cc",
+    "blueprint": "collectionlimpet_lightweight",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "c",
+    "blueprint": "weapon_overcharged",
+    "grade": 5
+   },
+   "pin_note": "Type-11 / laser Conda mining"
+  },
+  {
+   "engineer_id": 300270,
+   "priority": 16,
+   "tier": "4 · Later / mining",
+   "why": "Alternative G5 limpets.",
+   "tip": "Encoded data — emission scans / trader",
+   "shortcut": "Sell commodities ✔",
+   "pin": {
+    "module_type": "pc",
+    "blueprint": "prospectinglimpet_lightweight",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "s",
+    "blueprint": "sensor_lightweight",
+    "grade": 5
+   },
+   "pin_note": "Pairs with The Sarge's collector pin"
+  },
+  {
+   "engineer_id": 300010,
+   "priority": 17,
+   "tier": "4 · Later / mining",
+   "why": "Refinery & fuel scoop for mining/exploring.",
+   "tip": "Mine icy rings",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "s",
+    "blueprint": "sensor_lightweight",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "pa",
+    "blueprint": "weapon_efficient",
+    "grade": 5
+   },
+   "pin_note": "Mass savings for Panther, explorer, Type-11"
+  },
+  {
+   "engineer_id": 300050,
+   "priority": 18,
+   "tier": "4 · Later / mining",
+   "why": "Only for frag cannons.",
+   "tip": "Xihe (rare)",
+   "shortcut": "Sell commodities ✔",
+   "pin": {
+    "module_type": "fc",
+    "blueprint": "weapon_doubleshot",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "mc",
+    "blueprint": "weapon_overcharged",
+    "grade": 3
+   },
+   "pin_note": "Only if you use frags"
+  },
+  {
+   "engineer_id": 300230,
+   "priority": 19,
+   "tier": "4 · Later / mining",
+   "why": "Comes with Corvette combat. Your Trade Elite gives the permit.",
+   "tip": "Konnga (rare)",
+   "shortcut": "Sell exploration data",
+   "pin": {
+    "module_type": "ls",
+    "blueprint": "lifesupport_lightweight",
+    "grade": 4
+   },
+   "alt_pin": {
+    "module_type": "scb",
+    "blueprint": "shieldcellbank_specialised",
+    "grade": 3
+   },
+   "pin_note": "Cheap mass saving on every ship"
+  },
+  {
+   "engineer_id": 300140,
+   "priority": 20,
+   "tier": "4 · Later / mining",
+   "why": "Low priority.",
+   "tip": "Conflict zones",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "fi",
+    "blueprint": "fsdinterdictor_expanded",
+    "grade": 4
+   },
+   "alt_pin": {
+    "module_type": "fsd",
+    "blueprint": "fsd_longrange",
+    "grade": 3
+   },
+   "pin_note": "Only if you interdict (bounty hunting)"
+  },
+  {
+   "engineer_id": 300300,
+   "priority": 21,
+   "tier": "Alt",
+   "why": "Alternative to Palin.",
+   "tip": "Same as Palin",
+   "shortcut": "Sell exploration data",
+   "pin": {
+    "module_type": "t",
+    "blueprint": "engine_tuned",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "t",
+    "blueprint": "engine_dirty",
+    "grade": 5
+   },
+   "pin_note": "Complements Palin's Dirty Drives pin"
+  },
+  {
+   "engineer_id": 300290,
+   "priority": 22,
+   "tier": "Colonia",
+   "why": "Colonia only.",
+   "tip": "Salvage",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "pd",
+    "blueprint": "powerdistributor_highfrequency",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "pp",
+    "blueprint": "powerplant_boosted",
+    "grade": 5
+   },
+   "pin_note": "Colonia copy of your Dweller pin"
+  },
+  {
+   "engineer_id": 300150,
+   "priority": 23,
+   "tier": "Colonia",
+   "why": "Colonia option.",
+   "tip": "Platinum hotspots",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "mc",
+    "blueprint": "weapon_overcharged",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "cc",
+    "blueprint": "collectionlimpet_lightweight",
+    "grade": 5
+   },
+   "pin_note": "Colonia copy of your Tod pin"
+  },
+  {
+   "engineer_id": 300280,
+   "priority": 24,
+   "tier": "Colonia",
+   "why": "Colonia all-rounder.",
+   "tip": "Colonia bounty hunting",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "scb",
+    "blueprint": "shieldcellbank_specialised",
+    "grade": 4
+   },
+   "alt_pin": {
+    "module_type": "sb",
+    "blueprint": "shieldbooster_heavyduty",
+    "grade": 5
+   },
+   "pin_note": "Her G4 SCB is the highest-grade SCB available (Steam pin guide)"
+  },
+  {
+   "engineer_id": 300130,
+   "priority": 25,
+   "tier": "Colonia",
+   "why": "Colonia option.",
+   "tip": "Inara commodity search",
+   "shortcut": "Craft only",
+   "pin": {
+    "module_type": "bh",
+    "blueprint": "armour_heavyduty",
+    "grade": 5
+   },
+   "alt_pin": {
+    "module_type": "hr",
+    "blueprint": "hullreinforcement_heavyduty",
+    "grade": 5
+   },
+   "pin_note": "Colonia copy of your Selene pin"
+  }
+ ]
+}

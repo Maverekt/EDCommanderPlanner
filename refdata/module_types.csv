@@ -1,0 +1,50 @@
+pattern,module_type,note
+^int_hyperdrive_,fsd,Frame shift drive (incl. supercruise overcharge)
+^int_powerplant_,pp,Power plant
+^int_engine_,t,Thrusters
+^int_powerdistributor_,pd,Power distributor
+^int_lifesupport_,ls,Life support
+^int_sensors_,s,Sensors
+^int_fuelscoop_,fs,Fuel scoop
+^int_shieldgenerator_.*_fast$,bsg,Bi-weave shield generator
+^int_shieldgenerator_.*_strong$,psg,Prismatic shield generator
+^int_shieldgenerator_size\d_class\d$,sg,Shield generator
+^int_shieldcellbank_,scb,Shield cell bank
+^int_hullreinforcement_,hr,Hull reinforcement
+^int_dronecontrol_collection_,cc,Collector limpet controller
+^int_dronecontrol_fueltransfer_,fx,Fuel transfer limpet controller
+^int_dronecontrol_resourcesiphon_,hb,Hatch breaker limpet controller
+^int_dronecontrol_prospector_,pc,Prospector limpet controller
+^int_fsdinterdictor_,fi,FSD interdictor
+^int_refinery_,rf,Refinery
+^int_detailedsurfacescanner_,ss,Detailed surface scanner
+^int_cargorack_,cr,Cargo rack
+^int_repairer_,am,Auto field-maintenance unit
+_armour_(grade\d|mirrored|reactive)$,bh,Bulkheads: all five armours take the same blueprints
+^hpt_shieldbooster_,sb,Shield booster
+^hpt_chafflauncher_,ch,Chaff launcher
+^hpt_heatsinklauncher_,hs,Heat sink launcher
+^hpt_plasmapointdefence_,po,Point defence
+^hpt_electroniccountermeasure_,ec,Electronic countermeasure
+^hpt_cloudscanner_,ws,Frame shift wake scanner
+^hpt_crimescanner_,kw,Kill warrant scanner
+^hpt_cargoscanner_,cs,Manifest scanner
+^hpt_beamlaser_,bl,Beam laser
+^hpt_pulselaser_,pl,Pulse laser
+^hpt_pulselaserburst_,ul,Burst laser
+^hpt_cannon_,c,Cannon
+^hpt_slugshot_,fc,Fragment cannon
+^hpt_multicannon_,mc,Multi-cannon
+^hpt_mininglaser_,ml,Mining laser
+^hpt_dumbfiremissilerack_,mr,Missile rack
+^hpt_basicmissilerack_,mr,Seeker missile rack
+^hpt_minelauncher_,nl,Mine launcher
+^hpt_railgun_,rg,Rail gun
+^hpt_plasmaaccelerator_,pa,Plasma accelerator
+^hpt_advancedtorppylon_,tp,Torpedo pylon
+^hpt_mining_abrblstr_,abl,Abrasion blaster
+^hpt_causticmissile_,emr,Enzyme missile rack
+^hpt_guardian_gausscannon_,ggc,Guardian gauss cannon
+^hpt_guardian_plasmalauncher_,gpc,Guardian plasma charger
+^hpt_guardian_shardcannon_,gsc,Guardian shard cannon
+^int_modulereinforcement_,mrp,Module reinforcement package

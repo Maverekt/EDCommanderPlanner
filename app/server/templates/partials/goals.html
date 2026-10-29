@@ -1,0 +1,209 @@
+{% if not plan %}
+<section class="panel panel-empty"><p class="muted">Goals appear once a commander has been imported.</p></section>
+{% else %}
+{% set s = plan.summary %}
+<div class="grid">
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Funding</h2><span class="marker">live credits · real rebuys from your Loadouts</span></div>
+    <div class="stats">
+      <div class="stat"><span class="stat-label">Available to spend</span><span class="stat-value">{{ s.available | num }}&nbsp;<small>cr</small></span>
+        <span class="stat-sub">{{ s.credits | num }} on hand{% if s.pending %} + {{ s.pending | num }} pending sales{% endif %} − {{ s.reserve | num }} reserve</span></div>
+      <div class="stat"><span class="stat-label">Still needed</span><span class="stat-value">{{ s.still_needed | num }}&nbsp;<small>cr</small></span>
+        <span class="stat-sub">across open goals</span></div>
+      <div class="stat"><span class="stat-label">Goals done</span><span class="stat-value">{{ s.done }}&nbsp;<small>of {{ s.total }}</small></span>
+        <span class="stat-sub">Fleet {{ s.fleet_value | num }} cr · net worth {{ s.net_worth | num }} cr</span></div>
+    </div>
+    <p class="note">Reserve = {{ s.reserve_n }} × biggest rebuy ({{ s.biggest_rebuy | num }} cr{% if s.reserve_ship %}, {{ s.reserve_ship.type_name }}{% endif %}). Change it under Plan settings.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Next up</h2></div>
+    {% include "partials/nextup_body.html" %}
+  </section>
+</div>
+
+{% if plan.goals and plan.new_examples %}
+<section class="panel panel-banner">
+  <p><strong>{{ plan.new_examples | length }} new example goal{{ 's' if plan.new_examples | length != 1 }}</strong> available: {{ plan.new_examples | join(', ') }}.</p>
+  <button type="button" class="btn btn-ghost" data-post="/api/goals/load-template">Add {{ 'them' if plan.new_examples | length != 1 else 'it' }}</button>
+</section>
+{% endif %}
+{% if not plan.goals %}
+<section class="panel panel-empty">
+  <p>No goals yet. Start from the example plan ({{ plan.template_name }}) and edit it, or add your own below.</p>
+  <button type="button" class="btn" data-post="/api/goals/load-template">Load example plan</button>
+</section>
+{% endif %}
+
+<ol class="goals">
+{% for g in plan.goals %}
+  <li class="goal {{ 'goal-done' if g.done }} {{ 'goal-parked' if g.parked }} {{ 'goal-fundable' if g.fundable }}">
+    <div class="goal-rail"><span class="goal-prio">{{ g.priority }}</span>
+      <button type="button" class="icon-btn" title="Move up" aria-label="Move up" data-post="/api/goals/{{ g.id }}/move" data-body='{"delta": -1}' {{ 'disabled' if loop.first }}>▲</button>
+      <button type="button" class="icon-btn" title="Move down" aria-label="Move down" data-post="/api/goals/{{ g.id }}/move" data-body='{"delta": 1}' {{ 'disabled' if loop.last }}>▼</button>
+    </div>
+    <div class="goal-body">
+      <div class="goal-head">
+        <div>
+          <span class="goal-kind">{{ g.kind | replace('_', ' ') }}</span>
+          <h3>{{ g.title }}</h3>
+          <div class="goal-ship">{{ g.name }}{% if g.build %} <span class="muted">· {{ g.build }}</span>{% endif %}</div>
+        </div>
+        <div class="goal-state">
+          {% if g.done %}<span class="tag tag-done">Done{% if g.auto_done %} · auto{% endif %}</span>
+          {% elif g.parked %}<span class="tag">Parked</span>
+          {% elif not g.reqs_met %}<span class="tag tag-lock">Unlock first</span>
+          {% elif g.fundable %}<span class="tag tag-promo">Affordable now</span>
+          {% elif g.owned %}<span class="tag tag-live">Owned</span>{% endif %}
+        </div>
+      </div>
+
+      {% if g.requires %}
+      <ul class="reqs">
+        {% for r in g.requires %}<li class="req req-{{ r.state }}"><span class="req-mark">{{ '✓' if r.met else ('?' if r.state == 'unknown' else '✗') }}</span> {{ r.label }}{% if r.detail %} <span class="muted small">({{ r.detail }})</span>{% endif %}</li>{% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if g.steps %}
+      <ul class="steps">
+        {% for step in g.steps %}
+        <li><label><input type="checkbox" data-step-goal="{{ g.id }}" value="{{ step }}" {{ 'checked' if step in g.steps_done }} {{ 'disabled' if step in g.steps_auto }}> {{ step }}{% if step in g.steps_auto %} <span class="tag tag-done" title="Ticked from your journal">auto</span>{% elif step in g.steps_ruled %} <span class="muted small" title="Ticks itself once your journal shows it">· ticks itself</span>{% endif %}</label></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if g.kind in ('ship', 'fleet_carrier') %}
+      <div class="goal-money">
+        {% if g.price_unknown %}<span class="muted">{{ g.cost_note }}</span>
+        {% else %}
+        <span>Cost {{ g.cost | num }} cr{% if g.build_plan %} <span class="muted">(build)</span>{% endif %}</span>
+        {% if g.list_price and not g.build_plan %}<span class="muted" title="Stock ship at list price (coriolis-data); stations can differ">· list price {{ g.list_price | num }} cr</span>{% endif %}
+        {% if g.owned and g.value %}<span class="muted">· current value {{ g.value | num }} cr</span>{% endif %}
+        {% if not g.done and not g.parked %}<span>· remaining <strong>{{ g.remaining | num }} cr</strong></span>
+        <span class="muted">· cumulative {{ g.cumulative | num }} cr</span>{% endif %}
+        {% endif %}
+      </div>
+      {% if not g.done and not g.parked and g.remaining %}
+      <div class="bar {{ 'bar-full' if g.funded >= 1 }}" role="progressbar" aria-valuenow="{{ (g.funded * 100) | round | int }}" aria-valuemin="0" aria-valuemax="100" aria-label="Funded"><span style="width: {{ (g.funded * 100) | round | int }}%"></span></div>
+      <div class="muted small">{{ (g.funded * 100) | round | int }}% funded after higher priorities</div>
+      {% endif %}
+      {% elif g.progress is not none %}
+      <div class="bar"><span style="width: {{ (g.progress * 100) | round | int }}%"></span></div>
+      {% endif %}
+
+      {% if g.build_plan %}{% set b = g.build_plan %}
+      <div class="goal-build">
+        <p class="small">Build <a href="/ships#build-{{ b.id }}">{{ b.name }}</a>{% if b.compare_label %} <span class="muted">vs your {{ b.compare_label }}</span>{% endif %}:
+          {% if b.done %}<span class="pos">fitted ✓</span>{% else %}{{ b.to_buy | num }} cr to buy · {{ b.eng_left }} module{{ 's' if b.eng_left != 1 }} to engineer{% if b.short_units %} · {{ b.short_units | num }} material units short{% endif %}{% endif %}</p>
+        {% if b.blueprints %}
+        <ul class="list-plain small goal-build-eng">
+          {% for x in b.blueprints %}<li><span class="tag {{ 'tag-done' if x.state == 'ready' else 'tag-lock' if x.state in ('locked', 'none') }}">{{ {'ready': 'Ready', 'partial': 'Partly', 'locked': 'Locked', 'none': 'None'}[x.state] }}</span> {{ x.label }}{% if x.slots | length > 1 %} ×{{ x.slots | length }}{% endif %} <span class="muted">· {{ x.advice }}</span></li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% include "partials/build_details.html" %}
+      </div>
+      {% endif %}
+      <p class="goal-next"><span class="muted small">Next:</span> {{ g.next_step }}</p>
+      {% if g.runner_up %}<p class="muted small">Runner-up: {{ g.runner_up }}</p>{% endif %}
+      {% if g.notes %}<p class="small">{{ g.notes }}</p>{% endif %}
+
+      <div class="goal-actions">
+        {% if g.status == 'done' %}<button type="button" class="btn btn-ghost" data-post="/api/goals/{{ g.id }}/status" data-body='{"status": "active"}'>Reopen</button>
+        {% elif not g.auto_done %}<button type="button" class="btn btn-ghost" data-post="/api/goals/{{ g.id }}/status" data-body='{"status": "done"}'>Mark done</button>{% endif %}
+        {% if g.status == 'parked' %}<button type="button" class="btn btn-ghost" data-post="/api/goals/{{ g.id }}/status" data-body='{"status": "active"}'>Unpark</button>
+        {% elif g.status == 'active' %}<button type="button" class="btn btn-ghost" data-post="/api/goals/{{ g.id }}/status" data-body='{"status": "parked"}'>Park</button>{% endif %}
+        {% if g.kind == 'ship' %}
+        <details class="goal-edit">
+          <summary class="btn btn-ghost">{{ 'Change build' if g.build_plan else 'Add a build' }}</summary>
+          <form data-api-form="/api/goals/{{ g.id }}/build" class="form">
+            {% set mine = build_options | selectattr(2, 'equalto', g.target_key) | list if g.target_key else build_options %}
+            {% if mine %}<label>Use an imported build <select name="build_id"><option value="">— paste one instead —</option>
+              {% for bid, bname, btype in mine %}<option value="{{ bid }}" {{ 'selected' if g.build_plan and g.build_plan.id == bid }}>{{ bname }}</option>{% endfor %}</select></label>{% endif %}
+            <label>Or paste SLEF / Loadout JSON <textarea name="text" rows="3" placeholder="EDSY: Export… → SLEF box. Coriolis: Export → SLEF."></textarea></label>
+            <p class="muted small">The goal's cost becomes the build's, and it tracks what your ship still needs. It completes itself once your ship matches.</p>
+            <p class="form-error warn small" hidden></p>
+            <div class="actions"><button class="btn" type="submit">Use this build</button>
+              {% if g.build_plan %}<button type="button" class="btn btn-ghost" data-post="/api/goals/{{ g.id }}/build" data-body='{}'>Detach</button>{% endif %}</div>
+          </form>
+        </details>
+        {% endif %}
+        <details class="goal-edit">
+          <summary class="btn btn-ghost">Edit</summary>
+          <form data-api-form="/api/goals/{{ g.id }}/update" class="form">
+            <label>Title <input name="title" value="{{ g.title }}" required></label>
+            {% if g.kind in ('ship', 'fleet_carrier', 'checklist') %}<label>Cost (cr) <input name="cost" inputmode="numeric" value="{{ g.cost or '' }}"></label>{% endif %}
+            {% if g.kind == 'ship' %}<label>Build <input name="build" value="{{ g.build or '' }}"></label>{% endif %}
+            <label>Runner-up <input name="runner_up" value="{{ g.runner_up or '' }}"></label>
+            {% if g.kind == 'checklist' %}<label>Steps (one per line) <textarea name="steps" rows="3">{{ g.steps | join('\n') }}</textarea></label>{% endif %}
+            <label>Notes <textarea name="notes" rows="2">{{ g.notes or '' }}</textarea></label>
+            <p class="form-error warn small" hidden></p>
+            <div class="actions"><button class="btn" type="submit">Save</button>
+              <button type="button" class="btn btn-ghost danger" data-post="/api/goals/{{ g.id }}/delete" data-confirm="Delete “{{ g.title }}”?">Delete</button></div>
+          </form>
+        </details>
+      </div>
+    </div>
+  </li>
+{% endfor %}
+</ol>
+
+<div class="grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Add a goal</h2></div>
+    <form data-api-form="/api/goals" class="form" data-reset>
+      <label>Kind
+        <select name="kind" data-kind-select>
+          <option value="ship">Ship for a role</option><option value="rank">Rank</option>
+          <option value="credits">Credits</option><option value="fleet_carrier">Fleet Carrier</option>
+          <option value="checklist">Checklist</option>
+        </select></label>
+      <label>Title <input name="title" required placeholder="e.g. Combat (PvE)"></label>
+      <label data-for-kind="ship">Ship <select name="target_key"><option value="">— not listed yet —</option>
+        {% for sym, name in ship_options %}<option value="{{ sym }}">{{ name }}</option>{% endfor %}</select></label>
+      <label data-for-kind="ship">Ship name if not listed <input name="ship_label" placeholder="e.g. Anaconda Mk II"></label>
+      <label data-for-kind="ship">Build <input name="build" placeholder="e.g. Tuned (PTN)"></label>
+      <label data-for-kind="ship fleet_carrier checklist">Cost (cr) <input name="cost" inputmode="numeric" placeholder="0"></label>
+      <label data-for-kind="rank">Rank <select name="rank_pick">
+        {% for key, label, names in track_options %}{% for n in names %}<option value="{{ key }}:{{ loop.index0 }}">{{ label }} — {{ n }}</option>{% endfor %}{% endfor %}</select></label>
+      <label data-for-kind="credits">Balance to reach (cr) <input name="target_value" inputmode="numeric"></label>
+      <label data-for-kind="checklist">Steps (one per line) <textarea name="steps" rows="3"></textarea></label>
+      <fieldset data-for-kind="ship fleet_carrier checklist"><legend class="small muted">Requires</legend>
+        <label>Rank <select name="req_rank"><option value="">— none —</option>
+          {% for key, label, names in track_options %}{% for n in names %}<option value="{{ key }}:{{ loop.index0 }}">{{ label }} — {{ n }}</option>{% endfor %}{% endfor %}</select></label>
+        <div class="flag-picks">{% for key, label in flag_options %}<label class="small"><input type="checkbox" name="flag" value="{{ key }}"> {{ label }}</label>{% endfor %}</div>
+      </fieldset>
+      <p class="form-error warn small" hidden></p>
+      <div class="actions"><button class="btn" type="submit">Add goal</button></div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Plan settings</h2></div>
+    <label class="form">Rebuys to keep in reserve
+      <input type="number" min="0" max="20" value="{{ s.reserve_n }}" data-plan-setting="reserve_rebuys"></label>
+    <p class="muted small">Never fly what you can't rebuy this many times.</p>
+    <h3 class="sub">Ships you're selling</h3>
+    <ul class="list-plain">
+      {% for f in plan.fleet %}<li><label><input type="checkbox" data-selling value="{{ f.ship_id }}" {{ 'checked' if f.selling }}>
+        {{ f.type_name }}{% if f.name %} “{{ f.name }}”{% endif %}{% if f.ident %} · {{ f.ident }}{% endif %}</label>
+        <span class="muted small">{% if f.value %}{{ f.value | num }} cr{% else %}no Loadout yet{% endif %}</span></li>{% endfor %}
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Account &amp; permits</h2><span class="marker">used by requirements</span></div>
+    <ul class="flags">
+      {% for key, f in plan.flags.items() %}
+      <li class="flag flag-{{ f.value }}">
+        <span class="flag-label">{{ f.label }}{% if f.auto_detail %} <span class="muted small">· {{ f.auto_detail }}</span>{% endif %}</span>
+        <select data-flag="{{ key }}" aria-label="{{ f.label }}">
+          {% for v, text in [('unknown', 'Auto / unknown' if f.auto_rule else 'Unknown'), ('yes', 'Yes'), ('no', 'No')] %}
+          <option value="{{ v }}" {{ 'selected' if (f.source == 'manual' and f.value == v) or (f.source != 'manual' and v == 'unknown') }}>{{ text }}{% if v == 'unknown' and f.source == 'auto' %} ({{ f.value }}){% endif %}</option>
+          {% endfor %}
+        </select>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endif %}

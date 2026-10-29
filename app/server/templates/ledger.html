@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block swap %}data-swap{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Overview · Ledger</p>
+  <h1>Credits &amp; spending</h1>
+</section>
+
+<nav class="subtabs" aria-label="Ledger sections">
+  {% for key, label in [('credits', 'Credits'), ('merc', 'Merc Coins'), ('ships', 'Ships'), ('modules', 'Modules'), ('unlocks', 'Unlocks')] %}
+  <a class="subtab {{ 'active' if key == sub }}" href="/ledger?tab={{ key }}" {% if key == sub %}aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+
+{% if sub == 'credits' %}
+  {% set v = credits %}
+  <nav class="subtabs" aria-label="Period">
+    {% for key, label in v.ranges.items() %}
+    <a class="subtab {{ 'active' if key == v.period }}" href="/ledger?tab=credits&range={{ key }}">{{ label }}</a>
+    {% endfor %}
+  </nav>
+  <p class="muted small">
+    {% if v.base_ts %}From the login at {{ v.base_ts | localtime }} to the login at {{ v.latest_ts | localtime }}.{% else %}Up to the login at {{ v.latest_ts | localtime }}.{% endif %}
+    Totals come from the game's <code>Statistics</code>; itemized events beneath come from the journal.
+  </p>
+  <div class="grid">
+    <section class="panel panel-wide">
+      <div class="panel-head">
+        <h2>By category</h2>
+        <span class="marker">net {{ v.net | unit('credits', true) }} · unattributed {{ '%.2f' | format(v.unattributed_share * 100) }}% of flows</span>
+      </div>
+      <div class="table-scroll"><table class="table ledger-table">
+        <thead><tr><th>Category</th><th class="num">Statistics</th><th class="num">Itemized</th><th class="num">Difference</th></tr></thead>
+        {% for c in v.categories %}
+        <tbody class="cat">
+          <tr class="{{ 'unattrib' if c.key == 'unattributed' }}">
+            <td>
+              <details class="toggle">
+                <summary>{{ c.label }} <span class="muted small">{{ c.count }} {{ "event" if c.count == 1 else "events" }}</span></summary>
+                {% if c.note %}<p class="muted small">{{ c.note }}</p>{% endif %}
+                {% if c.income and c.spend %}<p class="small">In {{ c.income | unit('credits', true) }} · out {{ c.spend | unit('credits', true) }}</p>{% endif %}
+                <ul class="itemized">
+                  {% for r in c.rows %}
+                  <li><span class="muted small">{{ r.ts | localtime('%d %b %H:%M') }}</span>
+                    <span>{{ r.item or r.event or '' }}</span>
+                    <span class="num {{ 'pos' if r.amount > 0 else 'neg' }}">{{ r.amount | unit('credits', true) }}</span></li>
+                  {% endfor %}
+                  {% if c.count > c.rows | length %}<li class="muted small">…and {{ c.count - c.rows | length }} more</li>{% endif %}
+                </ul>
+              </details>
+            </td>
+            <td class="num">{% if c.stat_delta is not none %}{{ c.stat_delta | unit('credits', true) }}{% else %}<span class="muted">—</span>{% endif %}</td>
+            <td class="num">{{ c.itemized | unit('credits', true) }}{% if c.compares == 'spend' and c.income %}<div class="muted small">spend only</div>{% endif %}</td>
+            <td class="num {{ 'muted' if not c.diff }}">{% if c.diff is not none %}{{ c.diff | unit('credits', true) if c.diff else '0 cr' }}{% endif %}</td>
+          </tr>
+        </tbody>
+        {% endfor %}
+      </table></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>This session</h2><span class="marker marker-live">● live, since last login</span></div>
+      {% if v.session %}
+      <dl class="kv kv-num">{% for s in v.session %}<dt>{{ s.label }}</dt><dd class="{{ 'pos' if s.amount > 0 else 'neg' }}">{{ s.amount | unit('credits', true) }}</dd>{% endfor %}</dl>
+      {% else %}<p class="muted">Nothing earned or spent since login.</p>{% endif %}
+    </section>
+  </div>
+
+{% elif sub == 'merc' %}
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head"><h2>Merc Coins</h2>{% if merc.as_of %}<span class="marker">as of login {{ merc.as_of | localtime }}</span>{% endif %}</div>
+      <dl class="kv kv-num">{% for k, val in merc.counters.items() %}<dt>{{ k | replace('MercCoins_', '') | replace('_', ' ') }}</dt><dd>{{ val | num }} MC</dd>{% endfor %}</dl>
+    </section>
+    <section class="panel panel-wide">
+      <div class="panel-head"><h2>Merc Coin events</h2></div>
+      {% if merc.rows %}
+      <div class="table-scroll"><table class="table"><tbody>{% for r in merc.rows %}<tr><td>{{ r.ts | localtime }}</td><td>{{ r.category }}</td><td>{{ r.item or '' }}</td><td class="num">{{ r.amount_delta | unit('merc_coins', true) }}</td></tr>{% endfor %}</tbody></table></div>
+      {% else %}<p class="muted">No Merc Coin events identified yet. They'll be added to <code>ledger_map.csv</code> once they appear in Diagnostics.</p>{% endif %}
+    </section>
+  </div>
+
+{% elif sub == 'ships' %}
+  <section class="panel">
+    <div class="table-scroll"><table class="table">
+      <thead><tr><th>Ship</th><th>Name</th><th>Ident</th><th>Acquired</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for s in ships %}
+      <tr>
+        <td>{{ s.type_name }}{% if s.current %} <span class="marker marker-live">current</span>{% endif %}</td>
+        <td>{{ s.name or '—' }}</td><td>{{ s.ident or '—' }}</td>
+        <td>{% if s.acquired_ts %}{{ s.acquired_ts | localtime('%d %b %Y') }}{% else %}<span class="muted">before history</span>{% endif %}</td>
+        <td>{% if s.disposed_ts %}{{ s.disposed_how | replace('_', ' ') }} {{ s.disposed_ts | localtime('%d %b %Y') }}{% else %}owned{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </section>
+
+{% elif sub == 'modules' %}
+  <nav class="subtabs" aria-label="Change type">
+    {% for key, label in [('', 'All'), ('engineered', 'Engineered'), ('experimental_applied', 'Experimentals'), ('bought', 'Bought'), ('sold', 'Sold'), ('stored', 'Stored'), ('retrieved', 'Retrieved')] %}
+    <a class="subtab {{ 'active' if key == (change or '') }}" href="/ledger?tab=modules&change={{ key }}">{{ label }}</a>
+    {% endfor %}
+  </nav>
+  <section class="panel">
+    <ul class="mod-history">
+      {% for m in modules %}
+      <li class="mh mh-{{ m.change }}">
+        <div class="mh-head">
+          <span class="muted small">{{ m.ts | localtime }}</span>
+          <span class="mh-change">{{ m.change | replace('_', ' ') }}</span>
+          <strong>{{ m.item_name }}</strong>
+          {% if m.slot %}<span class="muted small">{{ m.slot }}</span>{% endif %}
+          {% if m.credits_delta %}<span class="num {{ 'pos' if m.credits_delta > 0 else 'neg' }}">{{ m.credits_delta | unit('credits', true) }}</span>{% endif %}
+        </div>
+        {% if m.blueprint %}
+        <div class="mh-eng">
+          {{ m.blueprint_name }}
+          {% if m.grade_from and m.grade_from != m.grade_to %}G{{ m.grade_from }} → G{{ m.grade_to }}{% elif m.grade_to %}G{{ m.grade_to }}{% endif %}
+          {% if m.quality is not none %}· {{ (m.quality * 100) | round | int }}%{% endif %}
+          {% if m.experimental_name %}· <span class="exp">{{ m.experimental_name }}</span>{% endif %}
+          {% if m.engineer_name %}· <span class="muted">{{ m.engineer_name }}</span>{% endif %}
+        </div>
+        {% if m.modifiers %}
+        <details class="toggle small"><summary>{{ m.modifiers | length }} stats changed</summary>
+          <div class="table-scroll"><table class="table mods table-compact"><tbody>
+          {% for x in m.modifiers %}<tr><td>{{ x.label }}</td><td class="num muted">{{ x.before }}</td><td class="num {{ 'pos' if x.better else 'neg' if x.better == false }}">{{ x.after }}</td><td class="num small {{ 'pos' if x.better else 'neg' if x.better == false }}">{% if x.pct is not none %}{{ '%+.1f' | format(x.pct) }}%{% endif %}</td></tr>{% endfor %}
+          </tbody></table></div>
+        </details>
+        {% endif %}
+        {% endif %}
+      </li>
+      {% else %}<li class="muted">No module history yet.</li>{% endfor %}
+    </ul>
+  </section>
+
+{% elif sub == 'unlocks' %}
+  <section class="panel">
+    <div class="table-scroll"><table class="table"><tbody>
+      {% for u in unlocks %}<tr><td class="muted">{{ u.ts | localtime }}</td><td><span class="tag {{ 'tag-promo' if u.kind == 'promotion_available' }}">{{ u.kind | replace('_', ' ') }}</span></td><td>{{ u.text }}</td></tr>
+      {% else %}<tr><td class="muted">No unlocks yet.</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+{% endif %}
+{% endblock %}

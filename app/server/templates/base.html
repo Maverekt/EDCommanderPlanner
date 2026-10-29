@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-accent="{{ accent.key }}" style="--accent: {{ accent.hex }}{% if accent.live %}; --live: {{ accent.live }}{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="planner-token" content="{{ token }}">
+  <title>{% block title %}{{ active_label }}{% endblock %} · ED Commander Planner</title>
+  <link rel="icon" href="/icon.svg?accent={{ accent.key }}" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/planner.css?v={{ asset_version }}">
+  <script src="/static/app.js?v={{ asset_version }}" defer></script>
+</head>
+<body data-reload-areas="{% block reload_areas %}{% endblock %}" data-hover-cards="{{ 'select' if hover_cards else 'plain' }}">
+  <header class="topbar">
+    <a class="brand" href="/">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 28.1,9 28.1,23 16,30 3.9,23 3.9,9" fill="none" stroke="currentColor" stroke-width="2.4"/><polygon points="16,9 23,21.5 9,21.5" fill="currentColor"/></svg>
+      <span>ED&nbsp;Commander&nbsp;Planner</span>
+    </a>
+    <div class="topbar-right">
+      <span data-area="live" data-src="/partials/gamestate">{% include "partials/gamestate.html" %}</span>
+      {% set st = import_status %}
+      <span class="pill {{ 'pill-live' if st.state == 'running' else '' }}" id="import-pill">
+        {% if st.state == 'running' %}Importing {{ st.files_done }}/{{ st.files_total }}
+        {% elif st.state == 'error' %}Import error
+        {% else %}Journals up to date{% endif %}
+      </span>
+      {% if commanders %}
+      <label class="cmdr-select">
+        <span class="label">CMDR</span>
+        <select data-action="select-commander" aria-label="Commander">
+          {% for c in commanders %}
+          <option value="{{ c.key }}" {{ 'selected' if c.fid == fid }}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      {% endif %}
+      <div class="theme-select">
+      <span class="label">Theme</span>
+      <details class="theme-menu" data-theme-menu>
+        <summary class="theme-btn" title="Theme colour"><span class="swatch" style="--swatch: var(--accent)"></span><span class="theme-name" data-theme-name>{{ accent.label }}</span></summary>
+        <div class="theme-list" role="menu" aria-label="Theme colour">
+          {% for a in accents %}
+          <button type="button" class="theme-opt" role="menuitemradio" aria-checked="{{ 'true' if a.key == accent.key else 'false' }}"
+                  data-setting-accent="{{ a.key }}" data-hex="{{ a.hex }}" data-live="{{ a.live or '' }}" style="--swatch: {{ a.hex }}"><span class="swatch"></span>{{ a.label }}</button>
+          {% endfor %}
+        </div>
+      </details>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections">
+    {% for t in tabs %}
+    <a href="{{ t.path }}" class="tab {{ 'active' if t.key == active_top }} {{ 'later' if t.phase }}"
+       {% if t.key == active %}aria-current="page"{% endif %}>
+      {{ t.label }}
+      {% if t.key == 'settings' and unknown_count %}<span class="badge">{{ unknown_count }}</span>{% endif %}
+    </a>
+    {% endfor %}
+  </nav>
+  {% if active_top == 'overview' %}
+  <nav class="tabs tabs-sub" aria-label="Overview">
+    {% for t in overview_tabs %}
+    <a href="{{ t.path }}" class="tab {{ 'active' if t.key == active }}" {% if t.key == active %}aria-current="page"{% endif %}>{{ t.label }}</a>
+    {% endfor %}
+  </nav>
+  {% endif %}
+
+  <main class="page" id="page-main" {% block swap %}{% endblock %}>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="foot">
+    <span>v{{ version }} · local only · 127.0.0.1</span>
+    <span>Phase 6: backup &amp; import</span>
+  </footer>
+</body>
+</html>

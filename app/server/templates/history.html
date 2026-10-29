@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% from "partials/chart.html" import line %}
+{% block reload_areas %}overview{% endblock %}
+{% block swap %}data-swap{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Overview · History</p>
+  <h1>Balance &amp; ranks over time</h1>
+  <p class="muted">Balance and wealth come from each login; materials are the last count of each day.</p>
+</section>
+
+{% if not h %}
+<section class="panel panel-empty"><p class="muted">No history yet.</p></section>
+{% else %}
+<nav class="subtabs" aria-label="Date range">
+  {% for key, label in h.ranges.items() %}
+  <a class="subtab {{ 'active' if key == h.period }}" href="?range={{ key }}&track={{ h.track }}&material={{ h.material or '' }}" {% if key == h.period %}aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+
+<div class="grid">
+  <section class="panel panel-full">
+    {% set cal = h.calendar %}
+    <div class="panel-head"><h2>Play days</h2><span class="marker">{{ cal.active_days }} {{ 'day' if cal.active_days == 1 else 'days' }} with journal activity {% if h.period == 'all' %}since your first journal{% else %}in the last {{ h.period_label }}{% endif %}</span></div>
+    {% set cal_w = cal.weeks * 13 + 28 %}
+    <div class="cal-wrap">
+      <svg class="calendar" viewBox="0 0 {{ cal_w }} {{ 7 * 13 + 16 }}" style="max-width: {{ cal_w * 2 }}px; min-width: {{ [560, cal_w * 2] | min }}px" role="img" aria-label="Calendar of play days">
+        {% for m in cal.months %}<text class="tick" x="{{ 28 + m.x * 13 }}" y="9">{{ m.label }}</text>{% endfor %}
+        {% for d, label in [(0, 'Mon'), (2, 'Wed'), (4, 'Fri')] %}<text class="tick" x="0" y="{{ 24 + d * 13 }}">{{ label }}</text>{% endfor %}
+        {% for c in cal.cells %}
+        <rect class="cal-cell l{{ c.level }}" x="{{ 28 + c.x * 13 }}" y="{{ 14 + c.y * 13 }}" width="11" height="11" rx="2"><title>{{ c.day }}: {{ c.n | num }} events</title></rect>
+        {% endfor %}
+      </svg>
+    </div>
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Credit balance</h2><span class="marker">one point per login (LoadGame)</span></div>
+    {{ line(h.balance, 'Credit balance', ' cr') }}
+    {% if h.balance_points %}
+    <details class="toggle small"><summary>{{ h.balance_points | length }} login balances</summary>
+      <div class="table-scroll"><table class="table"><tbody>
+        {% for ts, v in h.balance_points | reverse %}<tr><td>{{ ts | localtime }}</td><td class="num">{{ v | num }} cr</td></tr>{% endfor %}
+      </tbody></table></div>
+    </details>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Merc Coins</h2><span class="marker">per login</span></div>
+    {{ line(h.merc, 'Merc Coins', ' MC') }}
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Total wealth</h2><span class="marker">Statistics, per login</span></div>
+    {{ line(h.wealth, 'Total wealth', ' cr') }}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Rank progress</h2></div>
+    <form class="inline-form" method="get">
+      <input type="hidden" name="range" value="{{ h.period }}"><input type="hidden" name="material" value="{{ h.material or '' }}">
+      <select name="track" aria-label="Rank track">
+        {% for key, label in h.tracks.items() %}<option value="{{ key }}" {{ 'selected' if key == h.track }}>{{ label }}</option>{% endfor %}
+      </select>
+    </form>
+    {{ line(h.rank, 'Rank progress') }}
+  </section>
+
+  <section class="panel panel-full">
+    <div class="panel-head"><h2>Material: {{ h.material_name or '—' }}</h2><span class="marker">last count each day</span></div>
+    <form class="inline-form" method="get">
+      <input type="hidden" name="range" value="{{ h.period }}"><input type="hidden" name="track" value="{{ h.track }}">
+      <select name="material" aria-label="Material">
+        {% for sym, name in h.materials %}<option value="{{ sym }}" {{ 'selected' if sym == h.material }}>{{ name }}</option>{% endfor %}
+      </select>
+    </form>
+    {{ line(h.material_chart, h.material_name or 'Material') }}
+  </section>
+</div>
+{% endif %}
+{% endblock %}

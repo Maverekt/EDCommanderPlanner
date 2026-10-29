@@ -1,0 +1,226 @@
+{
+ "name": "Goal Examples",
+ "source": "the author's progression workbook (Hangar & Goals), 25 Oct 2026",
+ "note": "Plan definitions only: roles, ships, costs and requirements. Progress, balances and ownership come from your journal.",
+ "goals": [
+  {
+   "key": "hauling",
+   "priority": 1,
+   "kind": "ship",
+   "title": "Ship Build Example - Hauling & trading",
+   "ship": "panthermkii",
+   "build": "Tuned (PTN)",
+   "cost": 531000000,
+   "runner_up": "Imperial Cutter (Boosted) — needs Duke",
+   "requires": [
+    {
+     "flag": "ODYSSEY"
+    }
+   ]
+  },
+  {
+   "key": "combat",
+   "priority": 2,
+   "kind": "ship",
+   "title": "Ship Build Example - Combat (PvE)",
+   "ship": "federation_corvette",
+   "build": "A-rated PvE kit",
+   "cost": 657969450,
+   "runner_up": "Imperial Cutter · Anaconda Mk II (new)",
+   "requires": [
+    {
+     "rank": "federation",
+     "min": 12
+    }
+   ]
+  },
+  {
+   "key": "mining",
+   "priority": 3,
+   "kind": "ship",
+   "title": "Ship Build Example - Mining",
+   "ship": "lakonminer",
+   "build": "SiriusCorp mining build",
+   "cost": 110000000,
+   "runner_up": "Laser Anaconda (you own the hull)",
+   "requires": [
+    {
+     "flag": "ODYSSEY"
+    }
+   ]
+  },
+  {
+   "key": "exploration",
+   "priority": 4,
+   "kind": "ship",
+   "title": "Ship Build Example - Exploration",
+   "ship": "mandalay",
+   "build": "Engineered (SiriusCorp)",
+   "cost": 62000000,
+   "runner_up": "Caspian + Nomad (max range) · Mandalay (all-rounder)",
+   "requires": [
+    {
+     "flag": "ODYSSEY"
+    }
+   ]
+  },
+  {
+   "key": "exobio_foot",
+   "priority": 5,
+   "kind": "checklist",
+   "title": "Goal Example - Exobiology (on foot)",
+   "detail": "Artemis suit G5 + Genetic Sampler (materials, not credits)",
+   "runner_up": "Nomad SLV (exobiology lander goal)",
+   "requires": [
+    {
+     "flag": "ODYSSEY"
+    }
+   ],
+   "steps": [
+    {
+     "text": "Buy an Artemis suit (Pioneer Supplies)",
+     "auto": "suit:artemis>=1"
+    },
+    {
+     "text": "Upgrade the Artemis suit to G5",
+     "auto": "suit:artemis>=5"
+    },
+    "Upgrade the Genetic Sampler"
+   ],
+   "activity": "exobiology"
+  },
+  {
+   "key": "imperial_flagship",
+   "priority": 6,
+   "kind": "ship",
+   "title": "Ship Build Example - Imperial flagship",
+   "ship": "cutter",
+   "build": "Boosted Cutter (PTN hauler)",
+   "cost": 450000000,
+   "runner_up": "Imperial Clipper at Baron (optional waypoint)",
+   "requires": [
+    {
+     "rank": "empire",
+     "min": 12
+    }
+   ]
+  },
+  {
+   "key": "multirole_new",
+   "priority": 7,
+   "kind": "ship",
+   "title": "Ship Build Example - Multirole (new)",
+   "ship": null,
+   "ship_label": "Anaconda Mk II",
+   "cost": 0,
+   "cost_note": "Credit price not announced",
+   "runner_up": "Anaconda (you own it)",
+   "requires": [
+    {
+     "flag": "CONDA2_CREDITS"
+    }
+   ]
+  },
+  {
+   "key": "fleet_carrier",
+   "priority": 8,
+   "kind": "fleet_carrier",
+   "title": "Goal Example - Mobile base",
+   "build": "Fleet Carrier + planned services",
+   "cost": 5487200000,
+   "runner_up": "Squadron Carrier (25B, squadrons)",
+   "requires": []
+  },
+  {
+   "key": "exobio_lander",
+   "priority": 9,
+   "kind": "checklist",
+   "title": "Goal Example - Exobiology lander",
+   "detail": "Nomad SLV",
+   "cost": 0,
+   "cost_note": "Credit price not announced",
+   "runner_up": "SRV",
+   "requires": [
+    {
+     "flag": "NOMAD_CREDITS"
+    }
+   ],
+   "steps": [
+    "Buy a Nomad SLV"
+   ]
+  },
+  {
+   "key": "mining_path",
+   "priority": 10,
+   "kind": "checklist",
+   "title": "Goal Example - Mining path",
+   "activity": "mining",
+   "detail": "From the workbook's Mining path: kit, the 500 t for Selene Jean, the engineer unlock items, the Type-11",
+   "steps": [
+    {
+     "text": "Fit a laser miner: mining laser and refinery",
+     "auto": "fitted:laser_tool & fitted:refinery"
+    },
+    {
+     "text": "Mine 500 t of ore (Selene Jean's invite)",
+     "auto": "stat:Mining.Quantity_Mined>=500"
+    },
+    {
+     "text": "Keep 10 mined Painite for Selene Jean",
+     "auto": "cargo:painite>=10 | engineer:300210"
+    },
+    {
+     "text": "Keep 10 mined Osmium for Marsha Hicks",
+     "auto": "cargo:osmium>=10 | engineer:300150"
+    },
+    {
+     "text": "Keep 50 Bromellite for Bill Turner",
+     "auto": "cargo:bromellite>=50 | engineer:300010"
+    },
+    {
+     "text": "Own a Type-11 Prospector",
+     "auto": "owned:lakonminer"
+    },
+    {
+     "text": "Core mining kit: Seismic Charge Launcher and Pulse Wave Analyser",
+     "auto": "fitted:seismic & fitted:pwa"
+    },
+    "Engineer the mining build (its build on the Mining goal shows what's left)"
+   ]
+  },
+  {
+   "key": "explorer_kit",
+   "priority": 11,
+   "kind": "checklist",
+   "title": "Goal Example - Explorer kit",
+   "activity": "exploration",
+   "detail": "From the workbook's Exploration kit list; checked on your exploration ship",
+   "steps": [
+    {
+     "text": "Fuel scoop",
+     "auto": "fitted:fuelscoop"
+    },
+    {
+     "text": "Detailed Surface Scanner",
+     "auto": "fitted:dss"
+    },
+    {
+     "text": "Auto Field-Maintenance Unit",
+     "auto": "fitted:afmu"
+    },
+    {
+     "text": "Guardian FSD Booster",
+     "auto": "fitted:guardian_booster"
+    },
+    {
+     "text": "Heat sink launcher",
+     "auto": "fitted:heatsink"
+    },
+    {
+     "text": "SRV or Nomad hangar",
+     "auto": "fitted:srv"
+    }
+   ]
+  }
+ ]
+}

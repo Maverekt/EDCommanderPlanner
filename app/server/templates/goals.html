@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Goals</p>
+  <h1>Your plan</h1>
+  <p class="muted">Priorities, what each goal needs, and what you can afford. Ownership, ranks, credits and many requirements come from your journal; edit the plan itself here.</p>
+</section>
+
+<div data-area="goals live progress ships" data-src="/partials/goals">
+{% include "partials/goals.html" %}
+</div>
+
+<div data-area="goals progress" data-src="/partials/engineer-plan">
+{% include "partials/engineer_plan.html" %}
+</div>
+
+<div data-area="goals materials" data-src="/partials/eng-plan">
+{% include "partials/eng_plan.html" %}
+</div>
+{% endblock %}

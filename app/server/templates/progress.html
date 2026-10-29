@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Overview · Progress</p>
+  <h1>Ranks &amp; reputation</h1>
+  {% if view and view.as_of %}<p class="muted">As of login {{ view.as_of | localtime }}. Rank progress and reputation only update at login.</p>{% endif %}
+</section>
+
+<div data-area="progress" data-src="/partials/progress">
+{% include "partials/progress.html" %}
+</div>
+{% endblock %}

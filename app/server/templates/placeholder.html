@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Phase {{ tab.phase }}</p>
+  <h1>{{ tab.label }}</h1>
+  <p class="muted">{{ tab.summary }}</p>
+</section>
+<section class="panel panel-empty">
+  <p>This tab isn't built yet. The journal history it needs is already being stored.</p>
+  <a class="btn btn-ghost" href="/">Back to Dashboard</a>
+</section>
+{% endblock %}

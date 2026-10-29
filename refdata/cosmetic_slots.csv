@@ -1,0 +1,13 @@
+pattern,note
+^PaintJob$,
+^Decal,
+^Bobble,
+^ShipKit,
+^WeaponColour$,
+^EngineColour$,
+^StringLights$,
+^VesselVoice$,
+^ShipCockpit$,
+^CargoHatch$,
+^ShipName0,
+^ShipID0,

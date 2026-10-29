@@ -1,0 +1,184 @@
+{% if not av %}
+<section class="panel panel-empty"><p class="muted">Activities appear once a commander has been imported.</p></section>
+{% else %}
+{% set w = av.window %}
+<nav class="subtabs" aria-label="Activities">
+  {% for key, label in [('trading', 'Trading'), ('mining', 'Mining'), ('exploration', 'Exploration'), ('exobiology', 'Exobiology')] %}
+  <a href="/activities?tab={{ key }}&amp;s={{ which | urlencode }}" class="subtab {{ 'active' if key == atab }}" {% if key == atab %}aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+
+<div class="act-period">
+  <a href="/activities?tab={{ atab }}&amp;s=session" class="chip {{ 'chip-eng' if w.key == 'session' }}">This session</a>
+  <a href="/activities?tab={{ atab }}&amp;s=all" class="chip {{ 'chip-eng' if w.key == 'all' }}">All time</a>
+  {% if w.sessions | length > 1 %}
+  <details class="act-sessions"><summary class="chip">Earlier sessions</summary>
+    <ul class="list-plain small">{% for s in w.sessions[1:15] %}<li><a href="/activities?tab={{ atab }}&amp;s={{ s.start | urlencode }}" class="{{ 'pos' if w.key == s.start }}">{{ s.start | localtime }}</a><span class="muted">{{ '%.1f' | format(s.hours) }} h</span></li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+  <span class="muted small">{% if w.key == 'all' %}Lifetime counters come from the game; everything under them is from your journals since {{ first_journal | localtime('%d %b %Y') }} ({{ w.sessions | length }} sessions), and rates use the sessions where this activity happened ({{ '%.1f' | format(av.hours or 0) }} h).{% else %}Session from {{ w.start | localtime }} · {{ '%.1f' | format(av.hours or 0) }} h.{% endif %}</span>
+</div>
+{% set journal_title = ('from your journals since ' ~ (first_journal | localtime('%d %b %Y'))) if w.key == 'all' else (w.label | lower) %}
+
+{% macro life_value(r) %}{{ (r.value | round | int | num) ~ ((' ' ~ r.unit) if r.unit else '') }}{% endmacro %}
+{% macro lifetime_line() %}{% if which != 'all' and life.rows %}<p class="muted small">Lifetime (Statistics): {% for r in life.rows %}{{ r.label | lower }} {{ life_value(r) }}{% if not loop.last %} · {% endif %}{% endfor %}.</p>{% endif %}{% endmacro %}
+
+{% if w.key == 'all' and life.rows %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>{{ atab | capitalize }} · lifetime</h2><span class="marker">the game's own counters (Statistics), as of login {{ life.as_of | localtime }}</span></div>
+  <div class="stats">{% for r in life.rows %}<div class="stat"><span class="stat-label">{{ r.label }}</span><span class="stat-value">{{ life_value(r) }}</span></div>{% endfor %}</div>
+  <p class="muted small">These include play from before your oldest journal. The game doesn't keep lifetime counts of the details below (prospects, motherlodes, limpets, routes, per-commodity tables), so those come from your journals only.</p>
+</section>
+{% endif %}
+
+{% macro ship_pick(activity, choice, current) %}
+<label class="small act-ship">{{ activity | capitalize }} ship
+  <select data-change-post="/api/activities/{{ activity }}/ship" data-key="ship_id">
+    <option value="">Current ship{% if not choice %} ({{ (ship_opts | selectattr(0, 'equalto', current) | map(attribute=1) | first) or 'none' }}){% endif %}</option>
+    {% for sid, label in ship_opts %}<option value="{{ sid }}" {{ 'selected' if choice and choice == sid | string }}>{{ label }}</option>{% endfor %}
+  </select></label>
+{% endmacro %}
+
+{% macro unlocks_panel(width='') %}{% if unlocks %}
+<section class="panel act-unlocks {{ width }}">
+  <div class="panel-head"><h2>Engineer unlocks</h2><span class="marker">from {{ atab }} · checked against your {{ 'hold' if atab != 'exploration' else 'materials' }}</span></div>
+  <ul class="list-plain">
+    {% for u in unlocks %}
+    <li><span><span class="req-mark {{ 'pos' if u.enough else 'warn' }}">{{ '✓' if u.enough else '✗' }}</span> <strong>{{ u.qty }} {{ u.name }}</strong>{% if u.mined %} <span class="muted">(must be mined)</span>{% endif %} for <strong>{{ u.engineer }}</strong> <span class="muted">· {{ u.state | lower }}</span></span>
+      <span>{% if u.have is none %}<span class="muted">not in reference data</span>{% elif u.enough %}<span class="pos">you have {{ u.have }} {{ u.where }} — enough</span>{% else %}you have {{ u.have }} {{ u.where }}; {{ u.qty - u.have }} still needed{% endif %}</span></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}{% endmacro %}
+
+{% macro stat(label, value, sub='') %}<div class="stat"><span class="stat-label">{{ label }}</span><span class="stat-value">{{ value }}</span>{% if sub %}<span class="stat-sub">{{ sub }}</span>{% endif %}</div>{% endmacro %}
+{% macro rate(v, unit) %}{% if v is not none %}{{ v | round | int | num }}&nbsp;<small>{{ unit }}</small>{% else %}<span class="muted">—</span>{% endif %}{% endmacro %}
+
+{% if atab == 'trading' %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>Trading · {{ journal_title }}</h2>{{ ship_pick('trading', av.ship_choice, av.ship_id) }}</div>
+  <div class="stats">
+    {{ stat('Profit', (av.profit | num) ~ ' cr', (av.revenue | num) ~ ' cr sold − cost of what you sold') }}
+    {{ stat('Credits per hour', rate(av.cr_per_hour, 'cr/h')) }}
+    {{ stat('Traded', (av.bought | num) ~ ' t bought', (av.sold | num) ~ ' t sold · ' ~ (av.commodities | length) ~ ' commodities') }}
+    {{ stat('Travelled', ('%.1f' | format(av.ly)) ~ ' ly', (av.jumps) ~ ' jumps' ~ ((' · ' ~ (av.ly_per_hour | round | int) ~ ' ly/h') if av.ly_per_hour else '')) }}
+  </div>
+  {% if av.commodities %}
+  <div class="table-scroll"><table class="table act-table table-compact">
+    <thead><tr><th>Commodity</th><th class="num">Bought t</th><th class="num">Spent</th><th class="num">Sold t</th><th class="num">Revenue</th><th class="num">Profit</th></tr></thead>
+    <tbody>{% for r in av.commodities %}<tr><td>{{ r.name }}</td><td class="num">{{ r.bought | num }}</td><td class="num">{{ r.spent | num }}</td><td class="num">{{ r.sold | num }}</td><td class="num">{{ r.revenue | num }}</td><td class="num {{ 'pos' if r.profit > 0 else 'neg' if r.profit < 0 }}">{{ r.profit | num }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="muted">No trades in this period.</p>{% endif %}
+  {% if av.routes %}
+  <h3 class="sub">Your best routes in this period</h3>
+  <div class="table-scroll"><table class="table act-table table-compact"><thead><tr><th>Bought at</th><th>Sold at</th><th>Commodity</th><th class="num">Runs</th><th class="num">Tons</th><th class="num">Profit</th></tr></thead>
+    <tbody>{% for r in av.routes %}<tr><td class="small">{{ r.from }}</td><td class="small">{{ r.to }}</td><td>{{ r.commodity }}</td><td class="num">{{ r.runs }}</td><td class="num">{{ r.tons | num }}</td><td class="num pos">{{ r.profit | num }}</td></tr>{% endfor %}</tbody></table></div>
+  {% endif %}
+  {{ lifetime_line() }}
+</section>
+{% if unlocks %}<div class="grid">{{ unlocks_panel('panel-wide') }}</div>{% endif %}
+
+{% elif atab == 'mining' %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>Mining · {{ journal_title }}</h2>{{ ship_pick('mining', av.ship_choice, av.ship_id) }}</div>
+  <div class="stats">
+    {{ stat('Refined', (av.tons | num) ~ ' t', rate(av.tons_per_hour, 't/h') ~ (' · ' ~ (av.tons_per_busy_hour | round | int) ~ ' t/h while mining (' ~ (av.busy_hours * 60) | round | int ~ ' min)' if av.tons_per_busy_hour else '')) }}
+    {{ stat('Mining sales', (av.sold_cr | num) ~ ' cr', (av.sold_t | num) ~ ' t sold · ' ~ rate(av.cr_per_hour, 'cr/h')) }}
+    {{ stat('Prospected', av.prospected | num, ('High ' ~ av.content.get('High', 0) ~ ' · Medium ' ~ av.content.get('Medium', 0) ~ ' · Low ' ~ av.content.get('Low', 0)) if av.prospected else 'no asteroids prospected') }}
+    {{ stat('Materials', (av.materials | num), rate(av.materials_per_hour, 'per hour')) }}
+  </div>
+  <p class="small">
+    {% if av.motherlodes or av.cracked %}Motherlodes found {{ av.motherlodes }} · cracked {{ av.cracked }} · {% endif %}
+    Limpets: {% for k, n in av.limpets.items() %}{{ k }} {{ n }}{% if not loop.last %}, {% endif %}{% else %}<span class="muted">none launched</span>{% endfor %}
+    {% if av.hit_rate is not none %} · high-content rocks {{ (av.hit_rate * 100) | round | int }}%{% endif %}
+  </p>
+  {% if av.refined %}
+  <div class="table-scroll"><table class="table act-table table-compact"><thead><tr><th>Refined</th><th class="num">Tons</th></tr></thead>
+    <tbody>{% for r in av.refined %}<tr><td>{{ r.name }}</td><td class="num">{{ r.tons | num }}</td></tr>{% endfor %}</tbody></table></div>
+  {% endif %}
+  {% if av.sold %}<p class="small">Sold: {% for r in av.sold %}{{ r.name }} {{ r.cr | num }} cr{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+  {{ lifetime_line() }}
+</section>
+
+<div class="grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Your mining ship</h2><span class="marker">by method</span></div>
+    <ul class="list-plain small">
+      {% for key, m in av.methods.items() %}
+      <li><span><span class="tag {{ 'tag-done' if m.ready else 'tag-lock' }}">{{ 'Ready' if m.ready else 'Missing' }}</span> {{ m.label }}</span>
+        <span class="muted">{% if m.missing %}needs {{ m.missing | join(', ') }}{% else %}{{ m.rows | rejectattr('required') | rejectattr('fitted') | map(attribute='label') | join(', ') | default('fully kitted', true) }}{% if m.rows | rejectattr('required') | rejectattr('fitted') | list %} would help{% endif %}{% endif %}</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Add a favourite</h2></div>
+    <form data-api-form="/api/mining/spots" class="form" data-reset>
+      <label>Commodity <select name="commodity" required>{% for sym, name in av.commodity_options %}<option value="{{ sym }}">{{ name }}{% set ref = av.commodity_ref[sym] %} ({{ ref.methods | join('/') }}{% if ref.rings %}; {{ ref.rings }}{% endif %}){% endfor %}</select></label>
+      <label>Method <select name="method">{% for key, label in [('laser', 'Laser'), ('core', 'Core (deep core)'), ('subsurface', 'Sub-surface'), ('surface', 'Surface (abrasion)')] %}<option value="{{ key }}">{{ label }}</option>{% endfor %}</select></label>
+      <label>System <input name="system" placeholder="e.g. Omicron Capricorni B"></label>
+      <label>Body / ring <input name="body" placeholder="e.g. B 1 · Ring A"></label>
+      <label>Notes <input name="notes" placeholder="e.g. 2× Platinum overlap; sell at …"></label>
+      <p class="form-error warn small" hidden></p>
+      <div class="actions"><button class="btn" type="submit">Save favourite</button></div>
+    </form>
+  </section>
+  {{ unlocks_panel() }}
+</div>
+
+{% if av.spots %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>Favourite spots</h2><span class="marker">checked against your mining ship</span></div>
+  <ul class="spots">
+    {% for s in av.spots %}
+    <li class="spot">
+      <div><strong>{{ s.commodity_name }}</strong> · {{ s.method_label }}{% if not s.usual %} <span class="warn small">(usually {{ s.usual_methods }})</span>{% endif %}
+        <div class="muted small">{{ s.system or 'no system' }}{% if s.body %} · {{ s.body }}{% endif %}{% if s.notes %} — {{ s.notes }}{% endif %}</div></div>
+      <div class="small">{% if s.readiness.ready %}<span class="pos">Ship ready</span>{% else %}<span class="warn">Needs {{ s.readiness.missing | join(', ') }}</span>{% endif %}
+        <button type="button" class="icon-btn" title="Remove" aria-label="Remove favourite" data-post="/api/mining/spots/{{ s.id }}/delete" data-confirm="Remove this favourite?">✕</button></div>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% elif atab == 'exploration' %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>Exploration · {{ journal_title }}</h2>{{ ship_pick('exploration', av.ship_choice, av.ship_id) }}</div>
+  <div class="stats">
+    {{ stat('Travelled', ('%.1f' | format(av.ly)) ~ ' ly', (av.jumps ~ ' jumps · ') ~ rate(av.ly_per_hour, 'ly/h')) }}
+    {{ stat('Bodies scanned', av.bodies | num, (av.first_discovered ~ ' first discovered · ' ~ av.systems_honked ~ ' systems honked')) }}
+    {{ stat('Mapped', av.mapped | num, (av.first_mapped ~ ' first mapped · ' ~ av.codex ~ ' codex entries')) }}
+    {{ stat('Data sold', (av.earned | num) ~ ' cr', rate(av.cr_per_hour, 'cr/h')) }}
+  </div>
+  <p class="note">Unsold: <strong>{{ av.unsold_bodies | num }}</strong> scanned bodies since {% if av.unsold_since %}your last sale or death ({{ av.unsold_since | localtime }}){% else %}your first journal{% endif %}. Lost if you die; the value is only known when you sell.</p>
+  {{ lifetime_line() }}
+</section>
+<div class="grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Explorer kit</h2><span class="marker">{% if av.jump_range %}jump {{ '%.1f' | format(av.jump_range) }} ly{% endif %}</span></div>
+    <ul class="list-plain small">{% for r in av.kit.rows %}<li><span><span class="req-mark {{ 'pos' if r.fitted else 'warn' if r.required else 'muted' }}">{{ '✓' if r.fitted else '✗' if r.required else '·' }}</span> {{ r.label }}{% if r.required %} <span class="muted">(needed)</span>{% endif %}</span><span class="muted">{{ r.fitted | join(', ') if r.fitted else '' }}</span></li>{% endfor %}</ul>
+  </section>
+  {{ unlocks_panel('panel-wide') }}
+</div>
+
+{% else %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>Exobiology · {{ journal_title }}</h2><span class="marker">{% if av.artemis %}{{ av.artemis.name }}{% if av.artemis.grade %} · G{{ av.artemis.grade }}{% endif %}{% else %}no Artemis suit seen yet{% endif %}</span></div>
+  <div class="stats">
+    {{ stat('Species analysed', av.species_count, ('scans: log ' ~ av.steps.get('Log', 0) ~ ' · sample ' ~ av.steps.get('Sample', 0) ~ ' · analyse ' ~ av.steps.get('Analyse', 0))) }}
+    {{ stat('Sold', (av.sold_cr | num) ~ ' cr', ('incl. ' ~ (av.bonus | num) ~ ' cr first-logged bonus · ') ~ rate(av.cr_per_hour, 'cr/h')) }}
+    {{ stat('Unsold, carried', av.unsold | length, ((av.unsold_known | num) ~ ' cr known' ~ ((' + ' ~ av.unsold_unknown ~ ' not sold before') if av.unsold_unknown else ''))) }}
+  </div>
+  {% if av.unsold %}
+  <div class="table-scroll"><table class="table act-table table-compact"><thead><tr><th>Unsold species</th><th>Variant</th><th class="num">Base value</th></tr></thead>
+    <tbody>{% for u in av.unsold %}<tr><td>{{ u.species }}</td><td class="muted small">{{ u.variant or '' }}</td><td class="num">{{ u.value | num if u.value is not none else '?' }}</td></tr>{% endfor %}</tbody></table></div>
+  <p class="muted small">Values are what Vista Genomics paid you for that species before; a species you haven't sold yet shows "?". First-logged species pay a bonus on top.</p>
+  {% endif %}
+  {% if av.sold_species %}<p class="small">Sold: {% for name, n in av.sold_species %}{{ name }}{% if n > 1 %} ×{{ n }}{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+  {{ lifetime_line() }}
+</section>
+{% if unlocks %}<div class="grid">{{ unlocks_panel('panel-wide') }}</div>{% endif %}
+{% endif %}
+
+{% endif %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block reload_areas %}overview{% endblock %}
+{% block swap %}data-swap{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Overview · Statistics</p>
+  <h1>Lifetime statistics</h1>
+  {% if view and view.as_of %}
+  <p class="muted">From the game's own <code>Statistics</code>, as of login {{ view.as_of | localtime }}.
+    {% if view.baseline_ts %}Change is measured from the login at {{ view.baseline_ts | localtime }}.{% endif %}</p>
+  {% endif %}
+</section>
+
+{% if not view or not view.categories %}
+<section class="panel panel-empty"><p class="muted">No <code>Statistics</code> event stored yet. The game writes one at every login.</p></section>
+{% else %}
+<nav class="subtabs" aria-label="Change over">
+  {% for key, label in view.ranges.items() %}
+  <a class="subtab {{ 'active' if key == view.period }}" href="/statistics?range={{ key }}{% if q %}&amp;q={{ q | urlencode }}{% endif %}" {% if key == view.period %}aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+
+<div class="stat-search">
+  <input type="search" value="{{ q }}" placeholder="Search statistics, e.g. bounty" aria-label="Search statistics" data-filter-stats>
+  <span class="muted small" data-filter-count aria-live="polite"></span>
+</div>
+<p class="muted" data-filter-none hidden>No statistics match that search.</p>
+<div class="stat-grid">
+  {% for cat in view.categories %}
+  <section class="panel">
+    <div class="panel-head">
+      <h2>{{ cat.name }}</h2>
+      {% if view.period != 'all' %}<span class="marker {{ 'marker-live' if cat.changed }}">{{ cat.changed }} changed</span>{% endif %}
+    </div>
+    <div class="table-scroll"><table class="table stat-table table-compact">
+      <tbody>
+      {% for r in cat.rows %}
+      <tr class="{{ 'changed' if r.delta }}">
+        <td>{% if r.mapped %}{{ r.label }}{% else %}<code title="Not in stats_map.csv yet">{{ r.label }}</code>{% endif %}</td>
+        <td class="spark-cell">{% if r.spark %}<svg class="sparkline" viewBox="0 0 80 20" preserveAspectRatio="none" aria-hidden="true"><polyline points="{{ r.spark }}"/></svg>{% endif %}</td>
+        <td class="num">
+          {{ r.value | unit(r.unit) }}
+          {% if view.period != 'all' and r.delta %}<div class="delta">{{ r.delta | unit(r.unit, true) }}</div>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </section>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

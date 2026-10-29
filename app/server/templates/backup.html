@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Backup & import{% endblock %}
+{% macro size(n) %}{% if n >= 1048576 %}{{ '%.1f' | format(n / 1048576) }}&nbsp;MB{% else %}{{ ((n + 1023) // 1024) | num }}&nbsp;KB{% endif %}{% endmacro %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Settings</p>
+  <h1>Backup &amp; import</h1>
+</section>
+
+{% set sub = "backup" %}{% include "partials/settings_tabs.html" %}
+
+{% if done %}
+<div class="panel panel-banner">
+  <p><strong>Imported {{ done.ref }}</strong> · {{ done.events_added | num }} event{{ '' if done.events_added == 1 else 's' }} added · {{ done.summary }}</p>
+  {% if rollback_id == done.id %}<button type="button" class="btn btn-ghost" data-post="/api/backup/rollback/{{ done.id }}"
+    data-confirm="Put back everything this import changed? Journal events the game wrote since stay.">Roll back this import</button>{% endif %}
+</div>
+{% elif saved %}
+<div class="panel panel-banner"><p>Saved <code>{{ saved }}</code></p></div>
+{% endif %}
+
+<div class="grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Backup now</h2></div>
+    <p class="muted small">Every commander's history, goals, plans and notes, and your settings, as one <code>.edplanner</code> file in the backups folder. The {{ keep }} newest of each kind are kept. The tray's Backup Now does the same.</p>
+    <div class="actions"><button type="button" class="btn" data-post="/api/backup/now">Backup now</button></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Export</h2></div>
+    {% if commanders %}
+    <p class="muted small">The same file, saved where you choose: to move to another PC or keep somewhere safe.</p>
+    <div class="form">
+      {% for c in commanders %}
+      <label class="check"><input type="checkbox" data-export-key="{{ c.key }}" checked> {{ c.name }} <span class="muted small">{{ c.event_count | num }}&nbsp;events</span></label>
+      {% endfor %}
+    </div>
+    <div class="actions"><button type="button" class="btn" data-action="backup-export">Export…</button><span class="form-error warn small" hidden></span></div>
+    {% else %}
+    <p class="muted">No commanders yet: import a file, or play a session.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Import</h2></div>
+    <p class="muted small">Pick a <code>.edplanner</code> file. You choose what to bring in on the next page; nothing changes before that, and a backup is taken first.</p>
+    <div class="form"><input type="file" accept=".edplanner" data-backup-file aria-label="File to import"></div>
+    <div class="actions"><button type="button" class="btn" data-action="backup-upload">Review import…</button><span class="form-error warn small" hidden></span></div>
+  </section>
+
+  <section class="panel panel-full">
+    <div class="panel-head"><h2>Backups</h2><span class="muted small"><code>{{ backups_dir }}</code></span></div>
+    {% if backups %}
+    <div class="table-scroll"><table class="table table-compact">
+      <thead><tr><th>Made</th><th>Kind</th><th>Commanders</th><th class="num">Size</th><th></th></tr></thead>
+      <tbody>
+      {% for b in backups %}
+      <tr>
+        <td title="{{ b.name }}">{{ b.made | localtime }}</td>
+        <td>{{ b.kind }}</td>
+        <td>{% if b.error %}<span class="warn">unreadable</span>{% else %}{{ b.commanders | join(", ") or "—" }}{% endif %}</td>
+        <td class="num">{{ size(b.size) }}</td>
+        <td><div class="cell-actions">
+          <button type="button" class="btn btn-ghost" data-action="backup-download" data-name="{{ b.name }}">Download</button>
+          {% if not b.error %}<a class="btn btn-ghost" href="/settings/backup/review?file={{ b.name | urlencode }}">Restore…</a>{% endif %}
+        </div></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% else %}
+    <p class="muted">No backups yet.</p>
+    {% endif %}
+  </section>
+
+  {% if imports %}
+  <section class="panel panel-full">
+    <div class="panel-head"><h2>Imports</h2></div>
+    <div class="table-scroll"><table class="table table-compact">
+      <thead><tr><th>When</th><th>File</th><th>What</th><th class="num">Events added</th><th></th></tr></thead>
+      <tbody>
+      {% for r in imports %}
+      <tr>
+        <td>{{ r.at | localtime }}</td>
+        <td><code>{{ r.ref }}</code></td>
+        <td class="small">{{ r.summary }}</td>
+        <td class="num">{{ r.events_added | num }}</td>
+        <td>{% if r.id == rollback_id %}<button type="button" class="btn btn-ghost" data-post="/api/backup/rollback/{{ r.id }}"
+          data-confirm="Put back everything this import changed? Journal events the game wrote since stay.">Roll back</button>
+          {% elif r.status == 'rolled_back' %}<span class="muted small">rolled back</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p class="muted small">Only the latest import can be rolled back, while its backup is kept.</p>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

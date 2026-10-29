@@ -1,0 +1,96 @@
+{% if bview %}
+<section class="panel panel-wide" id="builds">
+  <div class="panel-head"><h2>Builds</h2><span class="marker">planned fits, compared with the ship you own</span></div>
+  <p class="muted small">Paste a build exported from EDSY or Coriolis (SLEF JSON), or copy one of your fits above with “Add to builds”. A build for a ship you own becomes another fit tab on that ship, showing where each of its modules is; a build for a ship you don't own stays here. A build attached to a ship goal sets that goal's cost; once the compared ship matches the build, the goal completes itself.</p>
+
+  {% for b in bview.builds %}
+  <details class="build {{ 'build-done' if b.done }}" id="build-{{ b.id }}" {{ 'open' if loop.first or b.done == false and b.goal_id }}>
+    <summary class="ship-summary">
+      <div class="panel-head">
+        <h3 class="build-title">{{ b.name }} <span class="muted small">· {{ b.ship_name }}</span></h3>
+        <span class="marker">{% if b.done %}<span class="pos">matches your ship ✓</span>{% elif b.compare_label %}vs {{ b.compare_label }}{% else %}not owned yet{% endif %}{% if b.goal_title %} · goal: {{ b.goal_title }}{% endif %}</span>
+      </div>
+      <div class="ship-chips">
+        <span class="chip chip-money">Value {{ b.total_value | num }} cr</span>
+        <span class="chip {{ 'chip-eng' if b.to_buy }}">To buy {{ b.to_buy | num }} cr{% if b.hull_cost %} (hull {{ b.hull_cost | num }}){% endif %}</span>
+        {% if b.rebuy %}<span class="chip">Rebuy {{ b.rebuy | num }} cr</span>{% endif %}
+        <span class="chip {{ 'chip-eng' if b.eng_left }}">Engineering left: {{ b.eng_left }} module{{ 's' if b.eng_left != 1 }}</span>
+        {% if b.blueprints %}<span class="chip">Engineers ready {{ b.engineers_ready }}/{{ b.blueprints | length }}</span>{% endif %}
+        {% if b.need_units %}<span class="chip {{ 'chip-short' if b.short_units }}">Materials {{ b.need_units | num }} units{% if b.short_units %}, {{ b.short_units | num }} short{% endif %}</span>{% endif %}
+      </div>
+    </summary>
+
+    <div class="build-controls">
+      <label class="small">Ship goal <select data-change-post="/api/builds/{{ b.id }}/update" data-key="goal_id">
+        <option value="">— none —</option>
+        {% for gid, title, target in bview.goal_options %}<option value="{{ gid }}" {{ 'selected' if gid == b.goal_id }}>{{ title }}{% if target and target != b.ship_type %} (different ship){% endif %}</option>{% endfor %}</select></label>
+      <label class="small">Compare with <select data-change-post="/api/builds/{{ b.id }}/update" data-key="ship_id">
+        <option value="">Automatic{% if not b.ship_choice %} ({{ b.compare_label or 'none owned yet' }}){% endif %}</option>
+        {% for sid, stype, label in bview.ship_options if stype == b.ship_type %}<option value="{{ sid }}" {{ 'selected' if sid == b.ship_choice }}>{{ label }}</option>{% endfor %}</select></label>
+    </div>
+    {% include "partials/build_details.html" %}
+
+    {% if b.blueprints %}
+    <h4 class="sub">Engineering left</h4>
+    <div class="table-scroll"><table class="table build-eng table-compact">
+      <thead><tr><th>Blueprint</th><th class="num">Modules</th><th>Engineer</th><th>Pin</th></tr></thead>
+      <tbody>
+      {% for x in b.blueprints %}
+      <tr>
+        <td>{{ x.label }}{% set exps = x.slots | selectattr('experimental') | list %}{% if exps %} <span class="muted small">+ experimental</span>{% endif %}
+          {% set floors = x.slots | map(attribute='done_grade') | select | list %}{% if floors %}<br><span class="muted small">already at G{{ floors | join(', G') }}</span>{% endif %}</td>
+        <td class="num">{{ x.slots | length }}</td>
+        <td><span class="tag {{ 'tag-done' if x.state == 'ready' else 'tag-lock' if x.state in ('locked', 'none') }}">{{ {'ready': 'Ready', 'partial': 'Partly', 'locked': 'Locked', 'none': 'None'}[x.state] }}</span>
+          <span class="small">{{ x.advice }}</span></td>
+        <td class="small muted">{{ x.pin_advice or '' }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% endif %}
+
+    {% if b.materials %}
+    <details class="toggle small"><summary>Materials for the engineering left: {{ b.need_units | num }} units{% if b.short_units %}, {{ b.short_count }} short{% endif %}</summary>
+      <ul class="list-plain xplan-needs">{% for m in b.materials %}<li><span>{{ m.name }}</span> <span class="num {{ 'neg' if m.short }}">{{ m.have }}/{{ m.need }}</span></li>{% endfor %}</ul>
+    </details>
+    {% endif %}
+
+    <details class="toggle small"><summary>Modules ({{ b.modules | length }}): {{ b.modules | selectattr('status', 'equalto', 'ok') | list | length }} match, {{ b.modules | selectattr('status', 'equalto', 'engineer') | list | length }} need engineering, {% set mv = b.modules | selectattr('status', 'equalto', 'move') | list | length %}{% if mv %}{{ mv }} to move, {% endif %}{{ b.modules | selectattr('status', 'equalto', 'buy') | list | length }} to buy</summary>
+      <div class="table-scroll"><table class="table build-mods table-compact"><thead><tr><th>Slot</th><th>Build</th><th>Your ship</th><th class="num">Price</th></tr></thead><tbody>
+      {% for m in b.modules %}
+      <tr class="bm-{{ m.status }}">
+        <td class="muted">{{ m.slot }}</td>
+        <td>{{ m.name }}{% if m.blueprint %}<br><span class="small">{{ m.blueprint }} G{{ m.grade }}{% if m.experimental %} · {{ m.experimental }}{% endif %}</span>{% endif %}</td>
+        <td>{% if m.status == 'ok' %}<span class="pos">✓ fitted</span>{% elif m.status == 'move' %}<span class="pos">owned</span>: move from {{ m.move_from }}{% if m.actual %}<br><span class="small muted">now here: {{ m.actual }}</span>{% endif %}{% elif m.actual %}{{ m.actual }}{% if m.actual_eng %}<br><span class="small muted">{{ m.actual_eng }}</span>{% endif %}{% else %}<span class="muted">—</span>{% endif %}</td>
+        <td class="num">{% if m.status == 'buy' %}{{ m.value | num if m.value is not none else '?' }}{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody></table></div>
+    </details>
+
+    <div class="goal-actions">
+      {% if b.blueprints %}<button type="button" class="btn btn-ghost" data-post="/api/builds/{{ b.id }}/to-plan">Add engineering to the plan</button>{% endif %}
+      <button type="button" class="btn btn-ghost danger" data-post="/api/builds/{{ b.id }}/delete" data-confirm="Delete the build “{{ b.name }}”?">Delete</button>
+    </div>
+  </details>
+  {% endfor %}
+
+  <div class="grid">
+    <form data-api-form="/api/builds" class="form" data-reset>
+      <h3 class="sub">Import a build</h3>
+      <label>SLEF or Loadout JSON <textarea name="text" rows="4" required placeholder='[{"header": {"appName": "EDSY", …}, "data": {"event": "Loadout", …}}]'></textarea></label>
+      <label>Name (optional) <input name="name" placeholder="defaults to the ship name in the export"></label>
+      <p class="muted small">In EDSY: Export… → copy the SLEF box. In Coriolis: Export → SLEF. Links themselves can't be read.</p>
+      <p class="form-error warn small" hidden></p>
+      <div class="actions"><button class="btn" type="submit">Import</button></div>
+    </form>
+    {% if not bview.has_example %}
+    <div class="form">
+      <h3 class="sub">Example</h3>
+      <p class="small">The Type-11 Prospector multi-miner from EDSY: G5 engineering on nine modules.</p>
+      <div class="actions"><button type="button" class="btn btn-ghost" data-post="/api/builds/example">Load example build</button></div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

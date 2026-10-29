@@ -1,0 +1,4 @@
+kind,source,source_name,maps_to,reason
+material,coriolis,Adaptive Encyptors Capture,adaptiveencryptors,"coriolis typo; FDevIDs ""Adaptive Encryptors Capture"""
+engineer,coriolis,Felicty Farseer,300100,coriolis typo; FDevIDs Felicity Farseer
+engineer,coriolis,"Tod ""The Blaster"" McQuinn",300260,"coriolis uses double quotes; FDevIDs Tod 'The Blaster' McQuinn"

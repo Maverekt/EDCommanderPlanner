@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Diagnostics{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Settings</p>
+  <h1>Diagnostics</h1>
+</section>
+
+{% set sub = "diagnostics" %}{% include "partials/settings_tabs.html" %}
+
+<div class="grid">
+  <section class="panel" data-area="import" data-src="/partials/import">
+    {% include "partials/import.html" %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Dropped at ingest</h2><span class="marker">refdata/ignored_events.csv</span></div>
+    {% if dropped %}
+    <table class="table">
+      <thead><tr><th>Event</th><th class="num">Dropped</th></tr></thead>
+      <tbody>{% for d in dropped %}<tr><td><code>{{ d.event }}</code></td><td class="num">{{ d.n | num }}</td></tr>{% endfor %}</tbody>
+    </table>
+    {% else %}<p class="muted">Nothing dropped yet.</p>{% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Provisional attributions</h2></div>
+    <p><strong>{{ provisional.events | num }}</strong> events stored provisionally.</p>
+    {% if provisional.files %}
+    <ul class="list small">{% for f in provisional.files %}<li><code>{{ f.ref }}</code> · {{ f.detail }}</li>{% endfor %}</ul>
+    {% else %}<p class="muted small">Every file identified its commander.</p>{% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Live watcher</h2>
+      <span class="marker {{ 'marker-live' if live.running }}">{{ 'running' if live.running else 'stopped' }}</span>
+    </div>
+    <dl class="kv">
+      <dt>Tailing</dt><dd><code>{{ live.tail_path or '—' }}</code></dd>
+      <dt>Read to byte</dt><dd>{{ live.tail_offset | num }}</dd>
+      <dt>Events added live</dt><dd>{{ live.tail_added | num }}</dd>
+      <dt>Dropped live</dt><dd>{{ live.tail_dropped | num }}</dd>
+      <dt>Re-attributed</dt><dd>{{ live.tail_reattributed | num }}</dd>
+      <dt>Status.json</dt><dd>{% if live.status %}Flags {{ live.status.Flags }}{% if live.status.Balance is defined %} · Balance {{ live.status.Balance | num }}{% else %} · no Balance{% endif %}{% else %}not read{% endif %}</dd>
+    </dl>
+    {% if live.error %}<p class="warn small">{{ live.error }}</p>{% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Unrecognized symbols</h2></div>
+    <p class="muted">Tracked once reference data is loaded (Phase 0) and projectors read symbols (Phase 2).</p>
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Import log</h2><span class="marker">latest first</span></div>
+    {% if log_rows %}
+    <div class="table-scroll">
+    <table class="table">
+      <thead><tr><th>File</th><th>Status</th><th class="num">Added</th><th class="num">Dropped</th><th>When</th><th>Detail</th></tr></thead>
+      <tbody>
+      {% for r in log_rows %}
+      <tr>
+        <td><code>{{ r.ref }}</code></td>
+        <td><span class="status status-{{ r.status }}">{{ r.status | replace('_', ' ') }}</span></td>
+        <td class="num">{{ r.events_added | num }}</td>
+        <td class="num">{{ r.dropped_total | num }}</td>
+        <td>{{ r.at | localtime }}</td>
+        <td class="muted small">{{ r.detail or '' }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% else %}<p class="muted">No files imported yet.</p>{% endif %}
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Stored event types</h2><span class="marker">highlighted: read by a projector</span></div>
+    <div class="chips">
+      {% for t in stored_types %}<span class="chip {{ 'chip-on' if t.event in handled_events }}"><code>{{ t.event }}</code> {{ t.n | num }}</span>{% endfor %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Maintenance</h2></div>
+    <div class="actions">
+      <button type="button" class="btn" data-action="rebuild">Rebuild derived data</button>
+    </div>
+    <p class="muted small" id="rebuild-result">Replays stored events into snapshots and unlocks. Runs automatically after each import.</p>
+    <p class="muted small">Logs: <code>{{ logs_dir }}</code></p>
+  </section>
+</div>
+{% endblock %}

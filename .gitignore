@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Office lock files
+~$*
+
+# Secrets
+.env
+*.key
+
+data/
+.pytest_cache/
+
+# Personal files that must never be committed, wherever they're saved
+*.edplanner
+Journal.*.log
+*.xlsx
+
+# Tool caches
+.ruff_cache/
+.mypy_cache/

@@ -1,0 +1,16 @@
+{
+ "name": "Engineering Plan Example",
+ "source": "the author's progression workbook (Engineering Plan), 25 Oct 2026",
+ "rolls_per_grade": [2, 2, 3, 4, 5],
+ "entries": [
+  {"key": "FSD", "module_type": "fsd", "blueprint": "fsd_longrange", "modules": 3, "target_grade": 5, "experimental": "special_fsd_heavy", "include": true, "note": "Panther, Anaconda, Corvette/Cutter"},
+  {"key": "THR", "module_type": "t", "blueprint": "engine_dirty", "modules": 3, "target_grade": 5, "experimental": "special_engine_overloaded", "include": true, "note": "Panther, Corvette, Cutter"},
+  {"key": "PD", "module_type": "pd", "blueprint": "powerdistributor_highfrequency", "modules": 2, "target_grade": 5, "experimental": null, "include": true, "note": "Anaconda, Corvette"},
+  {"key": "SB", "module_type": "sb", "blueprint": "shieldbooster_heavyduty", "modules": 8, "target_grade": 5, "experimental": null, "include": true, "note": "Anaconda + Corvette boosters"},
+  {"key": "SG", "module_type": "sg", "blueprint": "shieldgenerator_reinforced", "modules": 2, "target_grade": 5, "experimental": null, "include": true, "note": "Anaconda, Corvette"},
+  {"key": "HRP", "module_type": "hr", "blueprint": "hullreinforcement_heavyduty", "modules": 4, "target_grade": 5, "experimental": null, "include": true, "note": "Corvette HRPs"},
+  {"key": "PP", "module_type": "pp", "blueprint": "powerplant_boosted", "modules": 2, "target_grade": 5, "experimental": null, "include": true, "note": "Anaconda, Corvette"},
+  {"key": "MC", "module_type": "mc", "blueprint": "weapon_overcharged", "modules": 4, "target_grade": 5, "experimental": "special_auto_loader", "include": false, "note": "Corvette multi-cannons (Auto Loader or Incendiary, +1 Corrosive)"},
+  {"key": "BEAM", "module_type": "bl", "blueprint": "weapon_efficient", "modules": 2, "target_grade": 5, "experimental": "special_thermal_vent", "include": false, "note": "Corvette beams"}
+ ]
+}

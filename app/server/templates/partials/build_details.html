@@ -1,0 +1,11 @@
+{# Collapsed extra details for a build: where it came from and how to reopen it. Expects `b`. #}
+<details class="build-details toggle small">
+  <summary>Details</summary>
+  <dl class="kv">
+    <dt>Imported</dt><dd>{{ b.imported | localtime }} from {{ b.builder or ('your journal' if b.source == 'journal' else 'a SLEF export') }}</dd>
+    {% if b.source_url %}<dt>Builder link</dt><dd><a href="{{ b.source_url }}" target="_blank" rel="noopener">Open in {{ b.builder or 'the planner' }} ↗</a> <span class="muted">to view or edit it there; re-import to update it here</span></dd>{% endif %}
+    <dt>Compared with</dt><dd>{{ b.compare_label or 'no owned ' ~ b.ship_name ~ ' yet' }}</dd>
+    <dt>Build value</dt><dd>{{ b.total_value | num }} cr{% if b.rebuy %} · rebuy {{ b.rebuy | num }} cr{% endif %}</dd>
+    {% if b.goal_title %}<dt>Goal</dt><dd>{{ b.goal_title }}</dd>{% endif %}
+  </dl>
+</details>

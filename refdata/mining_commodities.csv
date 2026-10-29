@@ -1,0 +1,21 @@
+commodity,methods,rings,note,source
+platinum,laser,Metallic,The laser meta; hotspots in metallic rings (metal-rich hotspots can't be laser mined),workbook
+osmium,laser,Metallic,Sells at the same stations as Platinum; 10 mined for Marsha Hicks,workbook
+painite,laser;core,Metallic;Metal Rich,10 mined for Selene Jean,workbook
+palladium,laser,Metallic,,community
+gold,laser,Metallic,200 for Lei Cheung's unlock can be bought or mined,community
+silver,laser,Metallic,,community
+bromellite,laser;core;subsurface,Icy,50 for Bill Turner,workbook
+lowtemperaturediamond,laser;core;subsurface,Icy,Workbook: not recommended for profit,workbook
+tritium,laser;core;subsurface,Icy,Fleet carrier fuel,workbook
+methanolmonohydratecrystals,laser;subsurface,Icy,,community
+lithiumhydroxide,laser,Icy,,community
+methaneclathrate,laser,Icy,,community
+opal,core,Icy,Void Opals: core; ~800k/t at high-demand stations,workbook
+grandidierite,core,Icy;Rocky,Core gem; ~800k/t at high-demand stations,workbook
+alexandrite,core;subsurface,Metal Rich;Rocky;Icy,Core gem; ~800k/t at high-demand stations,workbook
+musgravite,core,Rocky;Metal Rich,Core gem; ~800k/t at high-demand stations,workbook
+monazite,core;subsurface,Metallic;Metal Rich,,community
+rhodplumsite,core,Metal Rich,,community
+serendibite,core,Metal Rich;Rocky,,community
+benitoite,core,Metal Rich;Rocky,,community

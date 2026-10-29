@@ -1,0 +1,3 @@
+<span class="pill game game-{{ game.state }}" title="{% if game.since %}Since {{ game.since | localtime }}{% endif %}">
+  <span class="dot" aria-hidden="true"></span>{{ game.label }}
+</span>

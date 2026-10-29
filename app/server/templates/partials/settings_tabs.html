@@ -1,0 +1,5 @@
+<nav class="subtabs" aria-label="Settings sections">
+  {% for key, label, href in [("general", "General", "/settings"), ("backup", "Backup & import", "/settings/backup"), ("diagnostics", "Diagnostics", "/settings/diagnostics")] %}
+  <a class="subtab {{ 'active' if key == sub }}" href="{{ href }}" {% if key == sub %}aria-current="page"{% endif %}>{{ label }}{% if key == 'diagnostics' and unknown_count %} <span class="badge">{{ unknown_count }}</span>{% endif %}</a>
+  {% endfor %}
+</nav>

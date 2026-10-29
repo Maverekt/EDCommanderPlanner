@@ -1,0 +1,73 @@
+blueprint,display_name,grade,material,qty,merc_coins,source,note
+cargorack_extended,Extended,2,Mechanical Scrap,1,15,inara,Merc modules only
+cargorack_extended,Extended,2,Vanadium,1,,inara,Merc modules only
+cargorack_extended,Extended,2,Manganese,1,,inara,Merc modules only
+cargorack_extended,Extended,3,Mechanical Scrap,1,20,inara,Merc modules only
+cargorack_extended,Extended,3,Vanadium,1,,inara,Merc modules only
+cargorack_extended,Extended,3,Niobium,1,,inara,Merc modules only
+cargorack_extended,Extended,4,Mechanical Equipment,1,40,inara,Merc modules only
+cargorack_extended,Extended,4,High Density Composites,1,,inara,Merc modules only
+cargorack_extended,Extended,4,Tin,1,,inara,Merc modules only
+cargorack_extended,Extended,4,Niobium,1,,inara,Merc modules only
+cargorack_extended,Extended,5,Mechanical Equipment,1,1,inara,Merc modules only
+cargorack_extended,Extended,5,Mechanical Components,1,,inara,Merc modules only
+cargorack_extended,Extended,5,Proprietary Composites,1,,inara,Merc modules only
+cargorack_extended,Extended,5,Military Supercapacitors,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,2,Carbon,1,5,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,2,Iron,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,2,Shield Emitters,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,3,Iron,1,5,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,3,Shield Emitters,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,3,High Density Composites,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,4,Shield Emitters,1,10,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,4,High Density Composites,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,4,Proprietary Composites,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,4,Tungsten,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,5,Compound Shielding,1,25,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,5,Ruthenium,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,5,Proto Heat Radiators,1,,inara,Merc modules only
+modulereinforcement_heavyduty,Heavy duty,5,Core Dynamics Composites,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,2,Sulphur,1,5,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,2,Heat Dispersion Plate,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,2,Modified Consumer Firmware,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,3,Chromium,1,5,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,3,Modified Consumer Firmware,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,3,Heat Exchangers,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,4,Modified Consumer Firmware,1,10,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,4,Conductive Polymers,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,4,Selenium,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,4,Heat Vanes,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,5,Cracked Industrial Firmware,1,20,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,5,Thermic Alloys,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,5,Biotech Conductors,1,,inara,Merc modules only
+abrasionblaster_farreaching,Far-reaching,5,Proto Heat Radiators,1,,inara,Merc modules only
+mininglaser_longrange,Long range,2,Sulphur,1,5,inara,Merc modules only
+mininglaser_longrange,Long range,2,Heat Dispersion Plate,1,,inara,Merc modules only
+mininglaser_longrange,Long range,2,Modified Consumer Firmware,1,,inara,Merc modules only
+mininglaser_longrange,Long range,3,Chromium,1,5,inara,Merc modules only
+mininglaser_longrange,Long range,3,Modified Consumer Firmware,1,,inara,Merc modules only
+mininglaser_longrange,Long range,3,Heat Exchangers,1,,inara,Merc modules only
+mininglaser_longrange,Long range,4,Modified Consumer Firmware,1,10,inara,Merc modules only
+mininglaser_longrange,Long range,4,Conductive Polymers,1,,inara,Merc modules only
+mininglaser_longrange,Long range,4,Selenium,1,,inara,Merc modules only
+mininglaser_longrange,Long range,4,Heat Vanes,1,,inara,Merc modules only
+mininglaser_longrange,Long range,5,Cracked Industrial Firmware,1,25,inara,Merc modules only
+mininglaser_longrange,Long range,5,Thermic Alloys,1,,inara,Merc modules only
+mininglaser_longrange,Long range,5,Biotech Conductors,1,,inara,Merc modules only
+mininglaser_longrange,Long range,5,Proto Heat Radiators,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,2,Mechanical Scrap,1,10,inara,Merc modules only
+causticmissile_highyield,High-yield,2,Vanadium,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,2,Conductive Components,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,3,Mechanical Scrap,1,15,inara,Merc modules only
+causticmissile_highyield,High-yield,3,Vanadium,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,3,Electrochemical Arrays,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,4,Mechanical Equipment,1,20,inara,Merc modules only
+causticmissile_highyield,High-yield,4,High Density Composites,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,4,Tin,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,4,Polymer Capacitors,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,5,Mechanical Components,1,45,inara,Merc modules only
+causticmissile_highyield,High-yield,5,Proprietary Composites,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,5,Modified Embedded Firmware,1,,inara,Merc modules only
+causticmissile_highyield,High-yield,5,Military Supercapacitors,1,,inara,Merc modules only
+guardianweapon_antiguardianzone,Anti-Guardian Zone Resistance,1,Hardened Surface Fragments,2,,inara,Guardian weapons; Thargoid materials
+guardianweapon_antiguardianzone,Anti-Guardian Zone Resistance,1,Caustic Crystal,1,,inara,Guardian weapons; Thargoid materials

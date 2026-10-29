@@ -1,0 +1,6 @@
+event,condition,reason
+FSSSignalDiscovered,IsStation=true,"Station, fleet carrier and squadron carrier signals; non-station signals are kept for ROADMAP R1 (DESIGN §5.6)"
+FSSSignalDiscovered,SignalType=Outpost,"Outposts are dockable stations, but the game writes them without IsStation (DESIGN §5.6)"
+Music,,Soundtrack state changes
+ReceiveText,,"Chat, including other players' messages; dropped for privacy"
+CommunityGoal,,Periodic status refresh; CommunityGoalJoin and CommunityGoalReward are kept

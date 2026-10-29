@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Settings</p>
+  <h1>Settings</h1>
+</section>
+
+{% set sub = "general" %}{% include "partials/settings_tabs.html" %}
+
+<div class="grid">
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Paths</h2></div>
+    <dl class="kv kv-wide">
+      <dt>Journal folder</dt>
+      <dd><code>{{ journal_dir }}</code>{% if not journal_dir_exists %} <span class="warn">not found</span>{% else %} <span class="muted">read-only</span>{% endif %}</dd>
+      <dt>Data folder</dt><dd><code>{{ data_dir }}</code></dd>
+      <dt>Port</dt><dd><code>127.0.0.1:{{ port }}</code></dd>
+    </dl>
+  </section>
+
+  <section class="panel" data-area="import" data-src="/partials/import">
+    {% include "partials/import.html" %}
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Commanders</h2></div>
+    {% if commanders %}
+    <div class="table-scroll"><table class="table">
+      <thead><tr><th>Name</th><th>FID</th><th>First seen</th><th>Last seen</th><th class="num">Events</th><th></th></tr></thead>
+      <tbody>
+      {% for c in commanders %}
+      <tr>
+        <td>{{ c.name }}</td>
+        <td><code>{{ c.fid | mask }}</code></td>
+        <td>{{ c.first_seen | localtime }}</td>
+        <td>{{ c.last_seen | localtime }}</td>
+        <td class="num">{{ c.event_count | num }}</td>
+        <td>{% if c.fid == fid %}<span class="marker marker-live">selected</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% else %}
+    <p class="muted">No commanders found yet.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Reference data</h2>
+      {% if refdata.error %}<span class="marker warn">not loaded</span>{% else %}<span class="marker">bundled</span>{% endif %}
+    </div>
+    <dl class="kv">
+      <dt>Version</dt><dd>{{ refdata.version or '—' }}</dd>
+      <dt>Items</dt><dd>{{ refdata.items | num }}</dd>
+      {% for name, src in refdata.sources.items() %}
+      <dt>{{ src.repo }}</dt><dd><code title="{{ src.commit }}">{{ src.commit[:10] }}</code></dd>
+      {% endfor %}
+    </dl>
+    {% if refdata.error %}<p class="warn small">{{ refdata.error }}</p>{% endif %}
+    <p class="muted small">Checking for updates arrives in Phase 7.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Display</h2></div>
+    <p class="muted small"><strong>Theme</strong> (top right) sets the accent colour for highlights, bars, the logo and the tray icon. Where it's close to the cyan used for live data, live data turns amber.</p>
+    <label class="check"><input type="checkbox" data-setting-hover-cards {{ 'checked' if hover_cards }}> Hover details you can select and copy</label>
+    <p class="muted small">On: the details that appear when you hover (material sources, engineer locations and the like) stay open while the mouse moves into them, so text can be selected, and have a Copy button. Off: the same cards, for reading only; they close as the mouse leaves.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Coming later</h2></div>
+    <ul class="list muted">
+      <li>Reference data updates from releases: Phase 7</li>
+      <li>Journal folder override</li>
+    </ul>
+  </section>
+</div>
+{% endblock %}

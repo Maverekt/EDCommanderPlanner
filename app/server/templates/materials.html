@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Materials</p>
+  <h1>Materials on hand</h1>
+  {% if mats and mats.login_ts %}
+  <p class="muted">Counted at login {{ mats.login_ts | localtime }}, then kept live from pickups, trades and crafting.
+    {% if mats.live_count %}<span class="marker-live">● {{ mats.live_count }} changed since login.</span>{% endif %}
+    Snaps back to the game's own count at the next login.</p>
+  {% endif %}
+</section>
+
+<div data-area="materials goals" data-src="/partials/materials">
+{% include "partials/materials.html" %}
+</div>
+{% endblock %}

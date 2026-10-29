@@ -1,0 +1,28 @@
+{% set st = import_status %}
+<div class="panel-head">
+  <h2>Journal import</h2>
+  <span class="marker {{ 'marker-live' if st.state == 'running' }}">
+    {% if st.state == 'running' %}running{% elif st.state == 'error' %}error{% elif st.state == 'done' %}done{% else %}idle{% endif %}
+  </span>
+</div>
+{% if st.state == 'running' %}
+  {% set pct = (100 * st.files_done / st.files_total) | round | int if st.files_total else 0 %}
+  <div class="bar" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100">
+    <span style="width: {{ pct }}%"></span>
+  </div>
+  <p class="muted small">File {{ st.files_done }} of {{ st.files_total }}{% if st.current_file %} · <code>{{ st.current_file }}</code>{% endif %}</p>
+{% elif st.state == 'error' %}
+  <p class="warn">{{ st.error }}</p>
+{% endif %}
+<dl class="kv">
+  <dt>Files read this run</dt><dd>{{ st.files_done | num }}{% if st.state != 'running' and st.files_total == 0 and st.state == 'done' %} <span class="muted">(nothing new)</span>{% endif %}</dd>
+  <dt>Events added</dt><dd>{{ st.events_added | num }}</dd>
+  <dt>Events dropped</dt><dd>{{ st.events_dropped | num }}</dd>
+  {% if st.files_skipped_legacy %}<dt>Legacy files skipped</dt><dd>{{ st.files_skipped_legacy }}</dd>{% endif %}
+  {% if st.files_provisional %}<dt>Provisional files</dt><dd>{{ st.files_provisional }}</dd>{% endif %}
+  <dt>Last import</dt><dd>{{ last_import | localtime }}</dd>
+</dl>
+<div class="actions">
+  <button type="button" class="btn" data-action="rescan" {{ 'disabled' if st.state == 'running' }}>Rescan journals</button>
+  <a class="btn btn-ghost" href="/settings/diagnostics">Diagnostics</a>
+</div>

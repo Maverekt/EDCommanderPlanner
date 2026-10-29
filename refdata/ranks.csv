@@ -1,0 +1,115 @@
+track,rank,name
+combat,0,Harmless
+combat,1,Mostly Harmless
+combat,2,Novice
+combat,3,Competent
+combat,4,Expert
+combat,5,Master
+combat,6,Dangerous
+combat,7,Deadly
+combat,8,Elite
+combat,9,Elite I
+combat,10,Elite II
+combat,11,Elite III
+combat,12,Elite IV
+combat,13,Elite V
+trade,0,Penniless
+trade,1,Mostly Penniless
+trade,2,Peddler
+trade,3,Dealer
+trade,4,Merchant
+trade,5,Broker
+trade,6,Entrepreneur
+trade,7,Tycoon
+trade,8,Elite
+trade,9,Elite I
+trade,10,Elite II
+trade,11,Elite III
+trade,12,Elite IV
+trade,13,Elite V
+explore,0,Aimless
+explore,1,Mostly Aimless
+explore,2,Scout
+explore,3,Surveyor
+explore,4,Trailblazer
+explore,5,Pathfinder
+explore,6,Ranger
+explore,7,Pioneer
+explore,8,Elite
+explore,9,Elite I
+explore,10,Elite II
+explore,11,Elite III
+explore,12,Elite IV
+explore,13,Elite V
+soldier,0,Defenceless
+soldier,1,Mostly Defenceless
+soldier,2,Rookie
+soldier,3,Soldier
+soldier,4,Gunslinger
+soldier,5,Warrior
+soldier,6,Gladiator
+soldier,7,Deadeye
+soldier,8,Elite
+soldier,9,Elite I
+soldier,10,Elite II
+soldier,11,Elite III
+soldier,12,Elite IV
+soldier,13,Elite V
+exobiologist,0,Directionless
+exobiologist,1,Mostly Directionless
+exobiologist,2,Compiler
+exobiologist,3,Collector
+exobiologist,4,Cataloguer
+exobiologist,5,Taxonomist
+exobiologist,6,Ecologist
+exobiologist,7,Geneticist
+exobiologist,8,Elite
+exobiologist,9,Elite I
+exobiologist,10,Elite II
+exobiologist,11,Elite III
+exobiologist,12,Elite IV
+exobiologist,13,Elite V
+cqc,0,Helpless
+cqc,1,Mostly Helpless
+cqc,2,Amateur
+cqc,3,Semi Professional
+cqc,4,Professional
+cqc,5,Champion
+cqc,6,Hero
+cqc,7,Legend
+cqc,8,Elite
+cqc,9,Elite I
+cqc,10,Elite II
+cqc,11,Elite III
+cqc,12,Elite IV
+cqc,13,Elite V
+federation,0,None
+federation,1,Recruit
+federation,2,Cadet
+federation,3,Midshipman
+federation,4,Petty Officer
+federation,5,Chief Petty Officer
+federation,6,Warrant Officer
+federation,7,Ensign
+federation,8,Lieutenant
+federation,9,Lieutenant Commander
+federation,10,Post Commander
+federation,11,Post Captain
+federation,12,Rear Admiral
+federation,13,Vice Admiral
+federation,14,Admiral
+empire,0,None
+empire,1,Outsider
+empire,2,Serf
+empire,3,Master
+empire,4,Squire
+empire,5,Knight
+empire,6,Lord
+empire,7,Baron
+empire,8,Viscount
+empire,9,Count
+empire,10,Earl
+empire,11,Marquis
+empire,12,Duke
+empire,13,Prince
+empire,14,King

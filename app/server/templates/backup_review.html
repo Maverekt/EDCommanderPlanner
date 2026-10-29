@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Review import{% endblock %}
+{% macro mode_select(name, label) %}
+<select name="{{ name }}" data-mode aria-label="{{ label }}">
+  {% for m in modes %}<option value="{{ m }}" {{ 'selected' if m == 'merge' }}>{{ m | capitalize }}</option>{% endfor %}
+</select>
+{% endmacro %}
+{% macro count_cells(n) %}
+<td class="num">{{ n.file | num }}</td><td class="num">{{ n.new | num }}</td><td class="num">{{ n.same | num }}</td>
+<td class="num">{% if n.conflicts %}<span class="warn">{{ n.conflicts | num }}</span>{% else %}0{% endif %}</td><td class="num">{{ n.current_only | num }}</td>
+{% endmacro %}
+{% macro conflict_list(s, label) %}
+<div class="conflicts" data-conflicts-for="{{ s.mode_name }}">
+  <div class="panel-head">
+    <h3 class="sub">{{ label }}: {{ s.conflicts | length }} differ{{ '' if s.conflicts | length != 1 else 's' }}</h3>
+    <div class="cell-actions">
+      <button type="button" class="btn btn-ghost" data-conflicts-all="current">Keep all current</button>
+      <button type="button" class="btn btn-ghost" data-conflicts-all="file">Take all from file</button>
+    </div>
+  </div>
+  {% for x in s.conflicts %}
+  <div class="conflict">
+    <p><span class="muted small">{{ x.kind }}</span> <strong>{{ x.title }}</strong></p>
+    <div class="table-scroll"><table class="table table-compact">
+      <thead><tr><th>Field</th><th>Yours</th><th>In the file</th></tr></thead>
+      <tbody>{% for d in x.diffs %}<tr><td>{{ d.field }}</td><td>{{ d.current }}</td><td>{{ d.file }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    <div class="choice-row" role="radiogroup" aria-label="{{ x.title }}">
+      <label><input type="radio" name="{{ x.id }}" value="current" checked> Keep current</label>
+      <label><input type="radio" name="{{ x.id }}" value="file"> Take the file's</label>
+      {% if x.both %}<label><input type="radio" name="{{ x.id }}" value="both"> Keep both</label>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endmacro %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Settings · Backup &amp; import</p>
+  <h1>Review import</h1>
+</section>
+
+{% set sub = "backup" %}{% include "partials/settings_tabs.html" %}
+
+{% if error %}
+<section class="panel panel-empty">
+  <p class="warn">{{ error }}</p>
+  <p><a href="/settings/backup">Back to Backup &amp; import</a></p>
+</section>
+{% else %}
+<section class="panel">
+  <div class="panel-head"><h2>{{ name }}</h2><span class="marker">{{ kinds.get(manifest.kind, 'File') }}</span></div>
+  <dl class="kv">
+    <dt>Made</dt><dd>{{ manifest.exported_at | localtime }}</dd>
+    <dt>By version</dt><dd>{{ manifest.app_version or '—' }}</dd>
+    <dt>Commanders</dt><dd>{{ review.commanders | length }}</dd>
+  </dl>
+  <p class="muted small">For each part choose <strong>Skip</strong>, <strong>Merge</strong> (add what's new, keep yours, and settle anything that differs below) or <strong>Override</strong> (replace yours with the file's). History merges event by event and never conflicts: the journal is the record. Everything is backed up first, and the import can be rolled back.</p>
+</section>
+
+<form data-backup-apply="{{ ref }}">
+  {% for c in review.commanders %}
+  <section class="panel panel-wide">
+    <div class="panel-head">
+      <h2>{{ c.name }}</h2>
+      <span class="muted small"><code>{{ c.fid | mask }}</code> · {% if c.matched %}matched to yours{% else %}<span class="warn">new here: will be added</span>{% endif %}</span>
+    </div>
+    <div class="table-scroll"><table class="table">
+      <thead><tr><th>Part</th><th>Do</th><th class="num">In file</th><th class="num">New</th><th class="num">Same</th><th class="num">Differ</th><th class="num">Only yours</th></tr></thead>
+      <tbody>
+      {% for s in c.sections %}
+      <tr>
+        <td class="part-cell"><strong>{{ s.label }}</strong><div class="muted small">{{ s.desc }}</div></td>
+        <td>{{ mode_select(s.mode_name, c.name ~ ' ' ~ s.label) }}</td>
+        {{ count_cells(s.counts) }}
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% for s in c.sections if s.conflicts %}{{ conflict_list(s, s.label) }}{% endfor %}
+  </section>
+  {% endfor %}
+
+  {% set st = review.settings %}
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Settings</h2><span class="muted small">for every commander</span></div>
+    <div class="table-scroll"><table class="table">
+      <thead><tr><th>Part</th><th>Do</th><th class="num">In file</th><th class="num">New</th><th class="num">Same</th><th class="num">Differ</th><th class="num">Only yours</th></tr></thead>
+      <tbody><tr>
+        <td class="part-cell"><strong>Settings</strong><div class="muted small">Rolls per grade, rebuys held in reserve and the hover details choice. Paths and the port never travel</div></td>
+        <td>{{ mode_select(st.mode_name, 'Settings') }}</td>
+        {{ count_cells(st.counts) }}
+      </tr></tbody>
+    </table></div>
+    {% if st.conflicts %}{{ conflict_list(st, 'Settings') }}{% endif %}
+  </section>
+
+  <div class="actions">
+    <button type="submit" class="btn">Apply import</button>
+    <a class="btn btn-ghost" href="/settings/backup">Cancel</a>
+    <span class="form-error warn small" hidden></span>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

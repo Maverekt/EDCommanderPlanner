@@ -1,0 +1,74 @@
+{% if eplan %}
+<section class="panel panel-wide">
+  <div class="panel-head"><h2>Engineering plan</h2>
+    <span class="marker">{{ eplan.need_units | num }} units needed · <a href="/materials">{{ eplan.short_count }} materials short ({{ eplan.short_units | num }} units)</a></span></div>
+  <p class="muted small">Each blueprint's materials run from the grade above what's already done up to the target: recipe × rolls per grade × modules, plus the experimental once per module. Counts are live; shortfalls also show on the Materials tab.</p>
+
+  {% if not eplan.entries %}
+  <p>No plan yet. Start from the example ({{ eplan.template_name }}) and edit it, or add blueprints below.</p>
+  <button type="button" class="btn" data-post="/api/engplan/load-template">Load example plan</button>
+  {% endif %}
+
+  <ol class="eplan">
+    {% for e in eplan.entries %}
+    <li class="eplan-row xplan-row {{ 'xplan-off' if not e.include }}">
+      <div class="goal-rail"><span class="goal-prio">{{ e.priority }}</span>
+        <button type="button" class="icon-btn" title="Move up" aria-label="Move up" data-post="/api/engplan/{{ e.id }}/move" data-body='{"delta": -1}' {{ 'disabled' if loop.first }}>▲</button>
+        <button type="button" class="icon-btn" title="Move down" aria-label="Move down" data-post="/api/engplan/{{ e.id }}/move" data-body='{"delta": 1}' {{ 'disabled' if loop.last }}>▼</button>
+      </div>
+      <div class="eplan-main">
+        <div class="eng-head">
+          <span class="eng-name">{{ e.label }}</span>
+          <span class="{{ 'eng-grade' if e.include else 'eng-state' }}">{% if e.include %}G{{ e.done_grade + 1 if e.done_grade else 1 }}–G{{ e.target_grade }}{% else %}Not included{% endif %}</span>
+        </div>
+        <p class="muted small">{{ e.modules }} module{{ 's' if e.modules != 1 }}{% if e.done_grade %} · G{{ e.done_grade }} already done{% endif %}{% if e.experimental_name %} · experimental: {{ e.experimental_name }}{% endif %}{% if e.note %} · {{ e.note }}{% endif %}</p>
+        <p class="small">Engineers: {% for o in e.engineers %}<span class="{{ 'pos' if o.state == 'Unlocked' else 'muted' }}">{{ o.name }} G{{ o.max_grade }}{% if o.state == 'Unlocked' %} ✓{% endif %}</span>{% if not loop.last %}, {% endif %}{% else %}<span class="muted">none known</span>{% endfor %}</p>
+        {% if e.next_recipe %}
+        <p class="small">Next roll, G{{ e.next_grade }}: {% for m in e.next_recipe %}<span class="{{ 'neg' if m.have < m.qty }}">{{ m.qty }} {{ m.name }} ({{ m.have }})</span>{% if not loop.last %}, {% endif %}{% endfor %}
+          · <strong>{{ e.rolls_now }}</strong> roll{{ 's' if e.rolls_now != 1 }} possible now{% if not e.can_roll %} <span class="muted">(no unlocked engineer at this grade yet)</span>{% endif %}</p>
+        {% endif %}
+        <details class="toggle small"><summary>{{ e.units | num }} units across {{ e.need | length }} materials</summary>
+          <ul class="list-plain xplan-needs">{% for m in e.need %}<li><span>{{ m.name }}</span> <span class="num {{ 'neg' if m.have < m.qty }}">{{ m.qty }}</span></li>{% endfor %}</ul>
+        </details>
+      </div>
+      <div class="eplan-pin">
+        <button type="button" class="btn btn-ghost small" data-post="/api/engplan/{{ e.id }}/include" data-body='{"include": {{ 'false' if e.include else 'true' }}}'>{{ 'Exclude' if e.include else 'Include' }}</button>
+        <details class="goal-edit">
+          <summary class="btn btn-ghost small">Edit</summary>
+          <form data-api-form="/api/engplan/{{ e.id }}/update" class="form">
+            <label>Modules <input name="modules" inputmode="numeric" value="{{ e.modules }}" required></label>
+            <label>Target grade <input name="target_grade" inputmode="numeric" value="{{ e.target_grade }}" required></label>
+            <label>Grades already done on every module <input name="done_grade" inputmode="numeric" value="{{ e.done_grade }}"></label>
+            <label>Experimental <select name="experimental"><option value="">— none —</option>
+              {% for x in exp_options if x.module_type == e.module_type %}<option value="{{ x.value }}" {{ 'selected' if x.value == e.experimental }}>{{ x.label }}</option>{% endfor %}</select></label>
+            <label>For <input name="note" value="{{ e.note or '' }}"></label>
+            <p class="form-error warn small" hidden></p>
+            <div class="actions"><button class="btn" type="submit">Save</button>
+              <button type="button" class="btn btn-ghost danger" data-post="/api/engplan/{{ e.id }}/delete" data-confirm="Remove {{ e.label }} from the plan?">Delete</button></div>
+          </form>
+        </details>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+
+  <div class="grid">
+    <form data-api-form="/api/engplan" class="form" data-reset>
+      <h3 class="sub">Add a blueprint</h3>
+      <label>Blueprint <select name="pick" required>
+        {% for b in bp_options %}<option value="{{ b.value }}">{{ b.label }} (up to G{{ b.max_grade }})</option>{% endfor %}</select></label>
+      <label>Modules <input name="modules" inputmode="numeric" value="1" required></label>
+      <label>Target grade <input name="target_grade" inputmode="numeric" value="5" required></label>
+      <label>For <input name="note" placeholder="e.g. Corvette"></label>
+      <p class="muted small">Pick an experimental after adding, under Edit.</p>
+      <p class="form-error warn small" hidden></p>
+      <div class="actions"><button class="btn" type="submit">Add to plan</button></div>
+    </form>
+    <div class="form">
+      <h3 class="sub">Rolls per grade</h3>
+      <label>G1–G5, comma-separated <input value="{{ eplan.rolls | join(',') }}" data-change-post="/api/engplan/rolls" data-key="rolls"></label>
+      <p class="muted small">An estimate: how many rolls it takes to finish each grade. Better rolls finish a grade sooner. The workbook uses 2,2,3,4,5.</p>
+    </div>
+  </div>
+</section>
+{% endif %}

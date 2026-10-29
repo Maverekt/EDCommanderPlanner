@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block swap %}data-swap{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Notes</p>
+  <h1>Your notes</h1>
+  <p class="muted">Private to this commander and kept on this PC in the data folder, one Markdown file per note. They never go to GitHub; a <code>.edplanner</code> export carries them.</p>
+</section>
+
+{% if notes is none %}
+<section class="panel panel-empty"><p class="muted">Notes appear once a commander has been imported.</p></section>
+{% else %}
+<div class="notes-layout">
+  <aside class="panel notes-list">
+    <div class="notes-tools">
+      <form method="get" class="notes-search" role="search">
+        <input type="search" name="q" value="{{ q }}" placeholder="Search notes" aria-label="Search notes">
+      </form>
+      <button type="button" class="btn" data-post="/api/notes">+ New note</button>
+    </div>
+    {% if notes %}
+    <ul class="list-plain">
+      {% for x in notes %}
+      <li><a class="note-link {{ 'active' if note and x.id == note.id }}" href="/notes?n={{ x.id }}{% if q %}&amp;q={{ q | urlencode }}{% endif %}">
+        <span class="note-title">{% if x.pinned %}<span class="note-pin" title="Pinned">📌</span> {% endif %}<span class="note-title-text">{{ x.title }}</span></span>
+        <span class="muted small">{{ x.updated | localtime('%d %b %Y') }}{% if x.excerpt %} · {{ x.excerpt }}{% endif %}</span>
+      </a></li>
+      {% endfor %}
+    </ul>
+    {% elif q %}
+    <p class="muted small">No notes match “{{ q }}”. <a href="/notes">Clear the search</a></p>
+    {% else %}
+    <p class="muted small">No notes yet. Start one for trade routes, engineering reminders, farming spots, anything.</p>
+    {% endif %}
+    <p class="muted small notes-count">{{ total }} {{ 'note' if total == 1 else 'notes' }}{% if q %} · {{ notes | length }} shown{% endif %}</p>
+  </aside>
+
+  <section class="panel notes-view">
+    {% if not note %}
+    <p class="muted">{% if total %}Pick a note on the left.{% else %}Your first note will open here.{% endif %}</p>
+    {% else %}
+    <div class="note-read" {{ 'hidden' if editing }}>
+      <div class="panel-head"><h2 class="note-heading">{{ note.title }}</h2>
+        <span class="note-actions">
+          <a class="btn btn-ghost" href="/notes?n={{ note.id }}&amp;edit=1" data-note-edit>Edit</a>
+          <button type="button" class="btn btn-ghost" data-post="/api/notes/{{ note.id }}/pin" data-body='{"pinned": {{ 'false' if note.pinned else 'true' }}}'>{{ 'Unpin' if note.pinned else 'Pin' }}</button>
+          <button type="button" class="btn btn-ghost danger" data-post="/api/notes/{{ note.id }}/delete" data-confirm="Delete “{{ note.title }}”? It moves to the deleted folder inside your notes folder.">Delete</button>
+        </span></div>
+      <p class="muted small">Updated {{ note.updated | localtime }} · created {{ note.created | localtime('%d %b %Y') }} · <em>double-click the note to edit</em></p>
+      <div class="note-body" data-note-tasks="{{ note.id }}">{% if note.body.strip() %}{{ rendered }}{% else %}<p class="muted">Empty. <a href="/notes?n={{ note.id }}&amp;edit=1" data-note-edit>Write something</a>.</p>{% endif %}</div>
+    </div>
+    <form class="form note-form" data-note-editor="{{ note.id }}" {{ 'hidden' if not editing }}>
+      <label>Title <input name="title" value="{{ note.title }}" required maxlength="200"></label>
+      <div class="note-editor-bar">
+        <div class="note-modes" role="tablist" aria-label="Editor view">
+          <button type="button" role="tab" class="subtab active" data-note-mode="write" aria-selected="true">Write</button>
+          <button type="button" role="tab" class="subtab" data-note-mode="preview" aria-selected="false">Preview</button>
+        </div>
+        <div class="note-toolbar" role="toolbar" aria-label="Formatting">
+          <button type="button" class="btn btn-ghost small" data-md="heading" title="Heading">H</button>
+          <button type="button" class="btn btn-ghost small" data-md="bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
+          <button type="button" class="btn btn-ghost small" data-md="italic" title="Italic (Ctrl+I)"><em>I</em></button>
+          <button type="button" class="btn btn-ghost small" data-md="list" title="List">• List</button>
+          <button type="button" class="btn btn-ghost small" data-md="task" title="To-do">☐ To-do</button>
+          <button type="button" class="btn btn-ghost small" data-md="link" title="Link (Ctrl+K)">Link</button>
+          <button type="button" class="btn btn-ghost small" data-md="code" title="Code">`code`</button>
+        </div>
+      </div>
+      <textarea name="body" rows="18" spellcheck="true" aria-label="Note">{{ note.body }}</textarea>
+      <div class="note-body note-preview" hidden></div>
+      <div class="form-actions note-editor-actions">
+        <span class="note-status muted small" aria-live="polite">Saves as you type</span>
+        <button type="button" class="btn btn-ghost" data-note-revert disabled>Revert to before editing</button>
+        <button type="button" class="btn" data-note-done>Done</button>
+      </div>
+      <p class="form-error warn small" hidden></p>
+      <p class="muted small">Markdown: <code># heading</code>, <code>- list</code>, <code>- [ ] to do</code>, <code>**bold**</code>, <code>*italic*</code>, <code>`code`</code>, <code>~~strike~~</code>, <code>[text](example.com)</code> (https:// optional), <code>&gt; quote</code>; indent a list item to nest it. Enter carries a list on; Ctrl+S saves at once; Ctrl+Z undoes.</p>
+    </form>
+    {% endif %}
+  </section>
+</div>
+<p class="muted small">Stored in <code>{{ data_dir }}\notes\{{ fid | mask }}</code> (the full commander ID is in the folder name). Edits made there in a text editor show here on the next load.</p>
+{% endif %}
+{% endblock %}

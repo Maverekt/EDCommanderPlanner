@@ -1,0 +1,40 @@
+# Publish refdata-<YYYYMMDD>.zip and its SHA-256 as a GitHub Release asset whenever
+# reference data lands on master (DESIGN §7.5). The in-app updater (Phase 7) reads these.
+name: Reference data release
+
+on:
+  push:
+    branches: [master]
+    paths: ["refdata/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Validate and package
+        run: python tools/refdata_build.py package --out "$RUNNER_TEMP/release"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          zip=$(ls "$RUNNER_TEMP"/release/refdata-*.zip)
+          tag=$(basename "$zip" .zip)
+          version=$(python -c 'import json;print(json.load(open("refdata/manifest.json"))["refdata_version"])')
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "$zip" "$zip.sha256" --clobber
+          else
+            gh release create "$tag" "$zip" "$zip.sha256" \
+              --title "Reference data $version" \
+              --notes "Reference data $version for ED Commander Planner, built from commit ${GITHUB_SHA::7}. Verify with the .sha256 file."
+          fi

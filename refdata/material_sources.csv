@@ -1,0 +1,39 @@
+target,where,source
+fedcorecomposites;fedproprietarycomposites,High Grade Emissions in Federation-controlled systems (any state). Federal factions' HGEs only ever give these composites,wiki
+imperialshielding,High Grade Emissions in Empire-controlled systems (any state). Imperial factions' HGEs only ever give shielding,wiki
+improvisedcomponents,High Grade Emissions in systems in Civil Unrest,operator
+militarygradealloys;militarysupercapacitors,High Grade Emissions in systems in War or Civil War,operator
+militarygradealloys,The wiki's materials table also lists Civil Unrest HGEs for this one; its HGE page doesn't,wiki
+protoheatradiators;protolightalloys;protoradiolicalloys,High Grade Emissions in systems in Boom or Expansion (independent factions; Federal and Imperial HGEs give composites/shielding instead),wiki
+pharmaceuticalisolators,High Grade Emissions in systems in an Outbreak state with population over 1 million,wiki
+fedcorecomposites;fedproprietarycomposites;imperialshielding;improvisedcomponents;militarygradealloys;militarysupercapacitors;protoheatradiators;protolightalloys;protoradiolicalloys;pharmaceuticalisolators,"HGE tips: most common in systems over 1 million population; scanning the Nav Beacon can spawn them; where a faction meets several conditions, allegiance wins over state",wiki
+biotechconductors;exquisitefocuscrystals,Mission rewards (or a Material Trader); no reliable signal source,wiki
+type:Raw,"Crashed Anaconda at Koli Discii C 6 a (28.5777, 7.2193): raw materials, relog to respawn",operator
+type:Raw,Planetary surface prospecting with an SRV; Brain Tree sites for grade 1–4 raws,community
+family:Shield Data;family:Emission Data,Scanning ships: target one and keep it centred until the scan completes,wiki
+family:Wake Scans,Scanning frame shift wakes with a Frame Shift Wake Scanner,wiki
+family:Data Archives;family:Encryption Files;family:Encoded Firmware,"Data beacons among wreckage in Degraded/Encoded Emissions; satellites in Encoded Emissions near populated Earth-likes",wiki
+family:Data Archives;family:Encryption Files;family:Encoded Firmware,"Planetary outpost data points via the SRV Data Link Scanner (higher security gives rarer data); surface-scan missions often give rare and very rare data",wiki
+type:Encoded,"Jameson Crash Site, HIP 12099 1 B: encoded data from the crashed Cobra's beacons, relog to respawn",community
+ancientbiologicaldata;ancientculturaldata;ancienthistoricaldata;ancientlanguagedata;ancienttechnologicaldata,"Guardian ruins: scan obelisks with the SRV for Pattern Obelisk data. Can't be traded at Material Traders",wiki
+guardian_moduleblueprint;guardian_vesselblueprint;guardian_weaponblueprint,"Guardian ruins: Ancient Data Terminals give Blueprint Segments. Can't be traded at Material Traders",wiki
+family:Guardian,"Guardian ruins and structures, e.g. around Synuefe XR-H d11-102",community
+family:Thargoid,"Thargoid encounters: Non-Human Signal Sources, AX Conflict Zones, incursion systems, and the Pleiades and Witch Head nebulae",wiki
+type:Manufactured,"Ship salvage (bigger ships drop higher grades; any ship can drop any faction's parts), Degraded/Encoded Emissions, Combat Aftermath, mission rewards",wiki
+type:Manufactured,Most efficient overall: farm High Grade Emissions and trade the surplus at a Material Trader,wiki
+type:Raw,Material Traders swap within a column; trade down a grade for 3 of the lower grade,community
+type:Manufactured;type:Encoded,Material Traders swap within a family; trade down a grade for 3 of the lower grade,community
+family:Wake Scans,Best farm: a system in Famine with a distribution center. Drop in and scan the wakes of the small ships constantly arriving and leaving,operator
+polonium,"Farm: HIP 36601 C 1 a (-57.4599, 126.9543): crystalline shards, collected by SRV. Shards plentiful across body.",operator
+ruthenium,"Farm: HIP 36601 C 1 d (-51.2639, 14.7291): crystalline shards, collected by SRV",operator
+ruthenium,"Also: Outotz LS-K d8-3 B 7 b (no verified coordinates): crystalline shards, collected by SRV",operator
+tellurium,"Farm: HIP 36601 C 3 b (-17.6769, -55.18): crystalline shards, collected by SRV. Low gravity; catch drops before they float off.",operator
+technetium,"Farm: HIP 36601 C 5 a (3.55, 111.5415): crystalline shards, collected by SRV",operator
+technetium,"Also: HR 3230 3 a a (17.89, 173.34): brain trees, collected by SRV",operator
+yttrium,"Farm: Outotz LS-K d8-3 B 5 a (-1.9216, -145.7013): crystalline shards, collected by SRV",operator
+yttrium,"Also: Outotz LS-K d8-3 B 5 a (16.7966, -40.1293): crystalline shards, collected by SRV",operator
+antimony,"Farm: Outotz LS-K d8-3 B 5 c (no verified coordinates): crystalline shards, collected by SRV. Use the DSS shards heat map to find them.",operator
+selenium,"Recommended: trade at a Raw Material Trader, 6 Tin (G3) or 6 of another grade 4 raw (Polonium, Ruthenium, Tellurium, Technetium, Yttrium, Antimony) for 1",operator
+selenium,"Farm: HR 3230 3 a a (52.6, -165.8786): brain trees, collected by SRV. Slow: about as long as all the other grade 4 raws combined",operator
+selenium,"Also: HR 3230 3 a a (17.89, 173.34): brain trees, collected by SRV",operator
+polonium;ruthenium;tellurium;technetium;yttrium;antimony;selenium,"Grade 4 raw tips: bio site numbers are unreliable, so map the body fully with the DSS and use the shards heat map. Every shard on a body drops that body's highest-grade material; ignore nearby volcanic deposits (lower grades). Limpets on brain trees are unreliable; plan on SRV collection.",operator

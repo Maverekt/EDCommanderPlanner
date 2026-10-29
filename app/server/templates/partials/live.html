@@ -1,0 +1,37 @@
+{% macro marker(live, ts) -%}
+{%- if live %}<span class="marker marker-live" title="{{ ts | localtime }}">● live</span>
+{%- else %}<span class="marker" title="Confirmed at login">as of login {{ ts | localtime('%H:%M') }}</span>{% endif -%}
+{%- endmacro %}
+<div class="panel-head">
+  <h2>Commander status</h2>
+  {% if live %}<span class="marker">login {{ live.login_ts | localtime('%H:%M, %d %b') }} · {{ live.game_mode or '—' }}</span>{% endif %}
+</div>
+{% if live %}
+<div class="stats">
+  <div class="stat">
+    <span class="stat-label">Ship {{ marker(live.ship.live, live.ship.ts) }}</span>
+    <span class="stat-value">{{ live.ship.name or '—' }}</span>
+    <span class="stat-sub">{% if live.ship.ship_name %}“{{ live.ship.ship_name }}”{% else %}Unnamed{% endif %}{% if live.ship.ident %} · {{ live.ship.ident }}{% endif %}</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Credits {{ marker(live.balance.live, live.balance.ts) }}</span>
+    <span class="stat-value">{{ live.balance.value | num }}&nbsp;<small>cr</small></span>
+    <span class="stat-sub">
+      {% if live.session_delta is not none %}{{ live.session_delta | unit('credits', true) }} this session
+      {% else %}Live balance appears while you fly{% endif %}
+    </span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Total wealth {% if live.wealth %}{{ marker(live.wealth.live, live.wealth.ts) }}{% endif %}</span>
+    <span class="stat-value">{{ live.wealth.value | num if live.wealth else '—' }}&nbsp;<small>cr</small></span>
+    <span class="stat-sub">{% if live.wealth and live.wealth.live %}Live estimate{% else %}From Statistics{% endif %}</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Merc Coins {% if live.merc_coins %}{{ marker(false, live.merc_coins.ts) }}{% endif %}</span>
+    <span class="stat-value">{{ live.merc_coins.value | num if live.merc_coins else '—' }}&nbsp;<small>MC</small></span>
+    <span class="stat-sub">From Statistics</span>
+  </div>
+</div>
+{% else %}
+<p class="muted">No <code>LoadGame</code> event stored yet.</p>
+{% endif %}

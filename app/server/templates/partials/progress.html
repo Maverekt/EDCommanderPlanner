@@ -1,0 +1,93 @@
+{% macro rank_bar(r) %}
+<div class="rank">
+  <div class="rank-head">
+    <span class="rank-label">{{ r.label }}</span>
+    {% if r.promotion_available %}<span class="tag tag-promo">Promotion available</span>{% endif %}
+    {% if r.promoted_since_login %}<span class="tag tag-live">Promoted · live</span>{% endif %}
+  </div>
+  <div class="rank-name">{{ r.name }}{% if r.rank is not none %} <span class="muted small">rank {{ r.rank }}</span>{% endif %}</div>
+  {% set pct = r.progress if r.progress is not none else 0 %}
+  <div class="bar {{ 'bar-full' if r.promotion_available or r.at_max }}" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ r.label }} progress">
+    <span style="width: {{ pct }}%"></span>
+  </div>
+  <div class="rank-foot muted small">
+    <span>{% if r.at_max %}Maximum rank{% elif r.progress is none %}No progress recorded{% else %}{{ r.progress }}%{% endif %}</span>
+    {% if r.next_name and not r.at_max %}<span>next: {{ r.next_name }}</span>{% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+{% if not view or not view.as_of %}
+<section class="panel panel-empty"><p class="muted">No <code>Rank</code> or <code>Progress</code> events stored yet. Log in to the game once and rescan.</p></section>
+{% else %}
+<div class="grid">
+  <section class="panel panel-full">
+    <div class="panel-head"><h2>Pilots' Federation</h2><span class="marker">as of login {{ view.as_of | localtime('%H:%M, %d %b') }}</span></div>
+    <div class="ranks ranks-pilots">{% for r in view.pilots %}{{ rank_bar(r) }}{% endfor %}</div>
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-head"><h2>Superpower reputation</h2><span class="marker">−100 to +100 · as of login</span></div>
+    {% for rep in view.reputation %}
+    <div class="rep">
+      <div class="rep-head"><span>{{ rep.label }}</span><span><strong>{{ rep.band }}</strong> <span class="muted small">{{ '%+.1f' | format(rep.value) }}</span></span></div>
+      <div class="rep-bar" role="meter" aria-valuenow="{{ rep.value }}" aria-valuemin="-100" aria-valuemax="100" aria-label="{{ rep.label }} reputation">
+        <span class="rep-zero"></span>
+        {% if rep.value >= 0 %}
+        <span class="rep-fill rep-pos" style="left: 50%; width: {{ rep.pct - 50 }}%"></span>
+        {% else %}
+        <span class="rep-fill rep-neg" style="left: {{ rep.pct }}%; width: {{ 50 - rep.pct }}%"></span>
+        {% endif %}
+      </div>
+    </div>
+    {% else %}<p class="muted">No <code>Reputation</code> event stored yet.</p>{% endfor %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Navy ranks</h2><span class="marker">as of login</span></div>
+    <div class="ranks ranks-1">{% for r in view.navy %}{{ rank_bar(r) }}{% endfor %}</div>
+  </section>
+
+  {% for scope, title in [('ship', 'Ship engineers'), ('onfoot', 'On-foot engineers')] %}
+  {% set rows = view.engineers.get(scope, []) %}
+  <section class="panel {{ 'panel-wide' if scope == 'ship' }}">
+    <div class="panel-head">
+      <h2>{{ title }}</h2>
+      <span class="marker">{{ rows | selectattr('state', 'equalto', 'Unlocked') | list | length }} unlocked · {{ rows | rejectattr('state', 'equalto', 'Undiscovered') | list | length }} of {{ rows | length }} discovered</span>
+    </div>
+    <ul class="engineers">
+      {% for e in rows %}
+      <li class="eng eng-{{ e.state | lower }} {{ 'eng-max' if e.max }}">
+        <div class="eng-head">
+          <span class="eng-name">{{ e.name }}{% if e.max %} <span class="eng-done" title="Grade 5 unlocked" aria-label="Grade 5 unlocked">✓</span>{% endif %}</span>
+          {% if e.state == 'Unlocked' %}
+            <span class="eng-rank">
+              <span class="eng-grade">{% if e.max %}Grade 5 · Max{% elif e.grade %}Grade {{ e.grade }}{% else %}Unlocked{% endif %}</span>
+              {% if e.grade %}<span class="pips" aria-label="Grade {{ e.grade }} of 5">{% for g in range(1, 6) %}<span class="pip {{ 'on' if g <= e.grade }}"></span>{% endfor %}</span>{% endif %}
+            </span>
+          {% else %}
+            <span class="eng-state">{{ e.state }}</span>
+          {% endif %}
+        </div>
+        {% if e.system %}
+        <div class="eng-loc" title="{% if e.verified %}Location confirmed by your own journal{% elif e.moved %}Your journal shows a different location than the reference list; the journal wins{% else %}Location from Inara (not yet seen in your journal){% endif %}">
+          {{ e.system }}{% if e.station %} · {{ e.station }}{% endif %}
+          {% if e.moved %}<span class="warn">moved?</span>{% endif %}
+        </div>
+        {% endif %}
+        {% if e.state == 'Unlocked' and e.grade %}
+        {% if not e.max and e.progress is not none %}
+        <div class="eng-prog" title="Progress through grade {{ e.grade + 1 }}">
+          <span class="bar" role="progressbar" aria-valuenow="{{ e.progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="Grade {{ e.grade + 1 }} progress"><span style="width: {{ e.progress }}%"></span></span>
+          <span class="muted small">G{{ e.grade + 1 }}: {{ e.progress }}%</span>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% if not e.max and view.eng_steps.get(e.id) and e.state != 'Unlocked' %}<div class="eng-next">{{ view.eng_steps.get(e.id) }}</div>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+</div>
+{% endif %}
