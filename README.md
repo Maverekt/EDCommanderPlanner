@@ -6,7 +6,7 @@ shows it in your browser from your own PC: ranks and reputation, ships and
 their engineering, materials, engineers, goals with funding, activities,
 notes and backups.
 
-**Status:** pre-1.0. It works, but it hasn't been announced and things may
+**Status:** pre-1.0. It works, but it hasn't been finished and things may
 change between versions.
 
 ## Privacy
@@ -47,7 +47,7 @@ Journals are read from `Saved Games\Frontier Developments\Elite Dangerous`.
 | Folder | What goes here |
 |---|---|
 | `app/` | The application: entry point, tray, server, core services, tests |
-| `refdata/` | Reference data: vendored EDCD files, our rule and fix CSVs, `manifest.json`, starter templates |
+| `refdata/` | Reference data: vendored EDCD files, our rule and fix CSVs, `manifest.json`, example templates |
 | `tools/` | `refdata_build.py` (validate, diff, package, journal coverage) and `build_exe.py` |
 | `packaging/` | PyInstaller spec |
 
